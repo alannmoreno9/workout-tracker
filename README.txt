@@ -52,3 +52,8 @@ VERSION 6 UPDATE
 - Data tab includes body-weight entries and deletion controls.
 - Body-weight history is included in Backup/Import.
 - Existing workout/cardio history and the dumbbell app icon remain intact.
+
+
+VERSION 7 UPDATE
+- Uses the final selected app icon: dark blue background with bright white dumbbell and three plates per side.
+- Body Weight, Cardio Progress, Strength Progress, Backup/Import, and all prior tracking features remain unchanged.
