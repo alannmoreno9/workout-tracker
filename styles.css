@@ -21,3 +21,12 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 @media(max-width:390px){.grid{grid-template-columns:1fr 1fr}.weight{width:72px}.name{font-size:15px}}
 
 .cardio-input{width:68px}.controls .time{min-width:26px;text-align:left}
+
+.body-weight-card{margin-bottom:14px}
+.body-weight-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.body-weight-controls{display:flex;align-items:center;gap:6px}
+.body-weight-input{width:88px}
+.body-weight-save{width:100%;margin-top:12px}
+.body-weight-history{margin-top:8px;border-top:1px solid var(--border)}
+.body-weight-history-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
+.body-weight-history-row:last-child{border-bottom:0}

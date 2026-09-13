@@ -43,3 +43,12 @@ VERSION 4 UPDATE
 
 VERSION 5 UPDATE
 - Replaced the app icon with the dumbbell-only icon (multiple plates).
+
+
+VERSION 6 UPDATE
+- Added Body Weight tracking on the Home screen.
+- Saves one scale weight per calendar day; saving again the same day updates that date.
+- Progress now shows Body Weight day-over-day and month-over-month change.
+- Data tab includes body-weight entries and deletion controls.
+- Body-weight history is included in Backup/Import.
+- Existing workout/cardio history and the dumbbell app icon remain intact.

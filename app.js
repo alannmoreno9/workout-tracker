@@ -5,7 +5,7 @@ let PLAN = [];
 let state = loadState();
 let currentWorkout = null;
 
-function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[]}; }
+function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[], bodyWeightHistory:[]}; }
 function loadState(){
   try{
     const raw = localStorage.getItem(KEY);
@@ -20,7 +20,8 @@ function loadState(){
       current: parsed.current && typeof parsed.current === 'object' ? parsed.current : {},
       cardioCurrent: parsed.cardioCurrent && typeof parsed.cardioCurrent === 'object' ? parsed.cardioCurrent : {},
       checks: parsed.checks && typeof parsed.checks === 'object' ? parsed.checks : {},
-      history: Array.isArray(parsed.history) ? parsed.history : []
+      history: Array.isArray(parsed.history) ? parsed.history : [],
+      bodyWeightHistory: Array.isArray(parsed.bodyWeightHistory) ? parsed.bodyWeightHistory : []
     };
   }catch(_){ return defaultState(); }
 }
@@ -78,6 +79,39 @@ function setWeight(key, value){
   }
   persist();
 }
+
+function bodyWeightRecords(){
+  return [...(state.bodyWeightHistory||[])].sort((a,b)=>a.date.localeCompare(b.date));
+}
+function bodyWeightForDate(date){
+  return (state.bodyWeightHistory||[]).find(x=>x.date===date)?.weight ?? '';
+}
+function saveBodyWeight(value){
+  const n=Number(value);
+  if(!Number.isFinite(n) || n<=0){
+    toast('Enter a valid weight');
+    return false;
+  }
+  const date=today();
+  const rec={date,weight:n};
+  const idx=(state.bodyWeightHistory||[]).findIndex(x=>x.date===date);
+  if(idx>=0) state.bodyWeightHistory[idx]=rec;
+  else state.bodyWeightHistory.push(rec);
+  state.bodyWeightHistory.sort((a,b)=>a.date.localeCompare(b.date));
+  persist(idx>=0 ? 'Today’s body weight updated' : 'Today’s body weight saved');
+  return true;
+}
+function previousBodyWeightMonthRecord(recs,i){
+  const cur=new Date(recs[i].date+'T12:00:00');
+  const month=(cur.getMonth()+11)%12;
+  const year=cur.getMonth()===0?cur.getFullYear()-1:cur.getFullYear();
+  const candidates=recs.slice(0,i).filter(r=>{
+    const d=new Date(r.date+'T12:00:00');
+    return d.getMonth()===month&&d.getFullYear()===year;
+  });
+  return candidates.at(-1)||null;
+}
+
 function setNav(active){
   for(const n of ['Home','Progress','Data'])
     document.getElementById('nav'+n).classList.toggle('active', n===active);
@@ -93,6 +127,30 @@ function showHome(){
   const hero=el('div','hero');
   hero.append(el('h2',null,'Choose your workout'),el('p',null,'Edit weights during the workout, then tap Save Today once.'));
   app.append(hero);
+
+  const weightCard=el('div','card body-weight-card');
+  const weightTop=el('div','body-weight-top');
+  const weightText=el('div');
+  weightText.append(el('b',null,'Body Weight'),el('div','note','Scale weight • one saved value per day'));
+  const weightControls=el('div','body-weight-controls');
+  const bodyInput=document.createElement('input');
+  bodyInput.className='weight body-weight-input';
+  bodyInput.inputMode='decimal';
+  bodyInput.autocomplete='off';
+  bodyInput.placeholder='—';
+  bodyInput.value=bodyWeightForDate(today());
+  bodyInput.setAttribute('aria-label','Body weight in pounds');
+  const lbs=el('span','time','lb');
+  weightControls.append(bodyInput,lbs);
+  weightTop.append(weightText,weightControls);
+  const saveWeight=el('button','primary body-weight-save','Save Weight');
+  saveWeight.type='button';
+  saveWeight.addEventListener('click',()=>{
+    if(saveBodyWeight(bodyInput.value)) showHome();
+  });
+  weightCard.append(weightTop,saveWeight);
+  app.append(weightCard);
+
   const grid=el('div','grid');
   for(const w of PLAN){
     const b=el('button','card workout-btn');
@@ -221,6 +279,40 @@ function showProgress(filter='all'){
   }
   app.append(toolbar);
 
+  const bwRecs=bodyWeightRecords();
+  const bwCard=el('div','card');
+  bwCard.style.marginTop='12px';
+  const bwHdr=el('div','section-title','BODY WEIGHT PROGRESS');
+  bwHdr.style.margin='-16px -16px 12px';
+  bwCard.append(bwHdr);
+
+  if(!bwRecs.length){
+    bwCard.append(el('div','empty','No body weight saved yet. Enter your scale weight on Home and tap Save Weight.'));
+  }else{
+    const bi=bwRecs.length-1, bcur=bwRecs[bi], bprev=bi>0?bwRecs[bi-1]:null, bpm=previousBodyWeightMonthRecord(bwRecs,bi);
+    const [bdd,bdc]=deltaText(bcur.weight,bprev?.weight);
+    const [bmd,bmc]=deltaText(bcur.weight,bpm?.weight);
+    const metric=el('div','metric');
+    const left=el('div');
+    left.append(
+      el('b',null,`${bcur.weight} lb`),
+      el('div','note',`Latest: ${bcur.date} • Prior day: ${bprev?.weight ?? '—'} lb • Prior month: ${bpm?.weight ?? '—'} lb`)
+    );
+    const right=el('div');
+    right.append(el('div','delta '+bdc,'D/D '+bdd),el('div',null,''),el('div','delta '+bmc,'M/M '+bmd));
+    metric.append(left,right);
+    bwCard.append(metric);
+
+    const recent=el('div','body-weight-history');
+    for(const rec of [...bwRecs].reverse().slice(0,7)){
+      const r=el('div','body-weight-history-row');
+      r.append(el('span',null,rec.date),el('b',null,`${rec.weight} lb`));
+      recent.append(r);
+    }
+    bwCard.append(recent);
+  }
+  app.append(bwCard);
+
   let any=false;
   for(const w of PLAN.filter(x=>filter==='all'||x.id===filter)){
     const recs=recsFor(w.id); if(!recs.length) continue; any=true;
@@ -294,8 +386,31 @@ function showData(){
     del.addEventListener('click',()=>deleteRecord(r.date,r.workout));
     metric.append(left,del); card.append(metric);
   }
-  app.append(card, el('p','note','Your data stays in this browser on this device. Export a backup periodically, especially before clearing Safari data or changing phones.'));
+  app.append(card);
+
+  const bwData=el('div','card');
+  bwData.style.marginTop='12px';
+  bwData.append(el('b',null,'Body weight days'));
+  const bwRows=[...(state.bodyWeightHistory||[])].sort((a,b)=>b.date.localeCompare(a.date));
+  if(!bwRows.length) bwData.append(el('div','empty','No body weight saved yet.'));
+  for(const r of bwRows){
+    const metric=el('div','metric');
+    const left=el('div');
+    left.append(el('b',null,r.date),el('div','note',`${r.weight} lb`));
+    const del=el('button','secondary','Delete'); del.type='button';
+    del.addEventListener('click',()=>deleteBodyWeight(r.date));
+    metric.append(left,del); bwData.append(metric);
+  }
+  app.append(bwData, el('p','note','Your data stays in this browser on this device. Export a backup periodically, especially before clearing Safari data or changing phones.'));
 }
+
+function deleteBodyWeight(date){
+  if(confirm('Delete this body weight entry?')){
+    state.bodyWeightHistory=(state.bodyWeightHistory||[]).filter(x=>x.date!==date);
+    persist('Deleted'); showData();
+  }
+}
+
 function deleteRecord(date,wid){
   if(confirm('Delete this saved workout day?')){
     state.history=state.history.filter(x=>!(x.date===date&&x.workout===wid));
