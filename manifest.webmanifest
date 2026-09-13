@@ -1,0 +1,10 @@
+{
+  "name": "Workout Tracker",
+  "short_name": "Workout",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#0B3F66",
+  "description": "Private-by-design mobile workout tracker with daily lifting history."
+}

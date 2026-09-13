@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3F66">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self';
+  style-src 'self';
+  img-src 'self' data:;
+  connect-src 'self';
+  font-src 'self';
+  object-src 'none';
+  base-uri 'none';
+  form-action 'self';
+  frame-src 'none';
+  worker-src 'self';
+  manifest-src 'self';
+">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="stylesheet" href="./styles.css">
+<title>Workout Tracker</title>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1 id="title">Workout Tracker</h1>
+    <button class="ghost" id="backupBtn" type="button">Backup</button>
+  </div>
+  <div class="sub" id="subtitle">One saved snapshot per workout day</div>
+</header>
+
+<main id="app" aria-live="polite"></main>
+
+<nav aria-label="Primary">
+  <button id="navHome" class="active" type="button">Home</button>
+  <button id="navProgress" type="button">Progress</button>
+  <button id="navData" type="button">Data</button>
+</nav>
+
+<div id="toast" class="toast" role="status"></div>
+<input id="importFile" type="file" accept=".json,application/json" hidden>
+<script src="./app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+SECURITY NOTES
+
+This build is intentionally self-contained.
+
+Controls included:
+- No third-party JavaScript.
+- No third-party CSS, fonts, analytics, ads, trackers, or APIs.
+- Restrictive Content Security Policy.
+- Network connections limited to the same GitHub Pages origin.
+- Referrer information disabled.
+- Search-engine indexing discouraged with noindex/nofollow.
+- Service worker only handles same-origin GET requests.
+- Workout history is stored in local browser storage on the user's device.
+- No passwords, API keys, tokens, credentials, or cloud database secrets are included.
+- Backup files are created locally by the browser.
+
+Important limitations:
+- A public GitHub repository means the APP CODE and default workout plan are publicly viewable.
+- noindex is a request to search engines, not an access-control mechanism.
+- Local browser storage is not encrypted by this app. Anyone with access to the unlocked device/browser profile may be able to access it.
+- Clearing Safari website data can remove local workout history. Use Export Backup periodically.
+- GitHub account security still matters because an attacker controlling the repository could change future versions of the hosted app.
+
+Recommended GitHub account settings:
+1. Use a unique password.
+2. Enable two-factor authentication.
+3. Keep recovery codes somewhere secure.
+4. Do not commit passwords, private keys, personal documents, or sensitive files to this repository.
+5. Review unexpected login/security alerts from GitHub.
+
+The app does not request camera, microphone, location, contacts, photos, Bluetooth, or other device permissions.

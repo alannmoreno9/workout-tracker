@@ -1,0 +1,568 @@
+[
+  {
+    "id": "abs",
+    "name": "Abs",
+    "cardio": [
+      [
+        "Run",
+        "10 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "5 min"
+      ]
+    ],
+    "sections": [
+      [
+        "ABS 1 x (3 x 12)",
+        [
+          [
+            "Life Fitness Abdominal",
+            115
+          ],
+          [
+            "Matrix Abdominal Crunch",
+            110
+          ],
+          [
+            "Nitroevo Abdominal Crunch",
+            null
+          ],
+          [
+            "Matrix Abdominal Bench",
+            0
+          ],
+          [
+            "Nitroevo Abdominal",
+            null
+          ],
+          [
+            "Life Fitness Torso Rotation",
+            115
+          ],
+          [
+            "Cable Crunch",
+            57.5
+          ],
+          [
+            "Hanging Leg Raise",
+            null
+          ],
+          [
+            "Laying Crunch",
+            null
+          ],
+          [
+            "Laying Leg Raise",
+            12
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "biceps",
+    "name": "Biceps & Forearms",
+    "cardio": [
+      [
+        "Run",
+        "10 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "5 min"
+      ]
+    ],
+    "sections": [
+      [
+        "FOREARMS 1 x (3 x 12)",
+        [
+          [
+            "Bar Curls",
+            70
+          ],
+          [
+            "Bell Curls",
+            25
+          ],
+          [
+            "Bell Twists",
+            25
+          ],
+          [
+            "Hand Grips",
+            null
+          ]
+        ]
+      ],
+      [
+        "BICEPS 3 x (3 x 12)",
+        [
+          [
+            "Life Fitness Biceps Curl",
+            100
+          ],
+          [
+            "Hammer Strength Biceps Curl",
+            90
+          ],
+          [
+            "Nitroeve Biceps Curl",
+            90
+          ],
+          [
+            "Nitroeve Preacher Curl",
+            90
+          ],
+          [
+            "Matrix Arm Curl",
+            70
+          ],
+          [
+            "Curl Hammer (Bell)",
+            27.5
+          ],
+          [
+            "Curl (Bell)",
+            32.5
+          ],
+          [
+            "Curl (Bar)",
+            60
+          ],
+          [
+            "Curl Reverse (Bar)",
+            40
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "chest",
+    "name": "Chest",
+    "cardio": [
+      [
+        "Run",
+        "0 min"
+      ],
+      [
+        "Stairs",
+        "10 min"
+      ],
+      [
+        "Walk",
+        "5 min"
+      ]
+    ],
+    "sections": [
+      [
+        "CHEST 3 x (3 x 12)",
+        [
+          [
+            "Life Fitness Chest Press",
+            100
+          ],
+          [
+            "Hammer Strength Decline Press",
+            60
+          ],
+          [
+            "Hammer Strength Incline Press",
+            50
+          ],
+          [
+            "Nitroevo Incline Press",
+            80
+          ],
+          [
+            "Hammer Strength Pectoral Fly",
+            100
+          ],
+          [
+            "Life Fitness Pectoral Fly",
+            130
+          ],
+          [
+            "Incline Press (Plate)",
+            70
+          ],
+          [
+            "Press (Plate)",
+            null
+          ],
+          [
+            "Decline Press (Plate)",
+            90
+          ],
+          [
+            "Incline Press (Bar)",
+            50
+          ],
+          [
+            "Press (Bar)",
+            50
+          ],
+          [
+            "Decline Press (Bar)",
+            null
+          ],
+          [
+            "Incline Press (Bell)",
+            null
+          ],
+          [
+            "Press (Bell)",
+            null
+          ],
+          [
+            "Decline Press (Bell)",
+            null
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "legs",
+    "name": "Legs",
+    "cardio": [
+      [
+        "Run",
+        "0 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "15 min"
+      ]
+    ],
+    "sections": [
+      [
+        "LEGS 4 x (3 x 12)",
+        []
+      ],
+      [
+        "BUTT - NO SAGGING❗",
+        [
+          [
+            "Life Fitness Hip Adduction",
+            200
+          ],
+          [
+            "Life Fitness Hip Abduction",
+            200
+          ],
+          [
+            "Life Fitness Glute",
+            100
+          ],
+          [
+            "Booty Builder",
+            45
+          ]
+        ]
+      ],
+      [
+        "LEGS - NO TOP HEAVY❗",
+        [
+          [
+            "Life Fitness Leg Extension",
+            120
+          ],
+          [
+            "Life Fitness Leg Curl",
+            110
+          ],
+          [
+            "Life Fitness Seated Leg Curl",
+            100
+          ]
+        ]
+      ],
+      [
+        "CALFS - NO CHICKEN LEGS❗",
+        [
+          [
+            "Life Fitness Calf Extension",
+            180
+          ],
+          [
+            "Life Fitness Seated Leg Press - Calf Presses",
+            130
+          ],
+          [
+            "Hammer Strength Calf Raise (Plate)",
+            55
+          ],
+          [
+            "Hammer Strength Leg Press (Plate) Calf Press",
+            130
+          ]
+        ]
+      ],
+      [
+        "TEST BOOSTER - BE A MAN❗",
+        [
+          [
+            "Life Fitness Seated Leg Press",
+            130
+          ],
+          [
+            "Hammer Strength Leg Press (Plate)",
+            135
+          ],
+          [
+            "Hammer Strength Linear Hack Press (Plate)",
+            45
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "shoulders",
+    "name": "Shoulders",
+    "cardio": [
+      [
+        "Run",
+        "10 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "5 min"
+      ]
+    ],
+    "sections": [
+      [
+        "SHOULDERS 3 x (3 x 12)",
+        []
+      ],
+      [
+        "LIFTS",
+        [
+          [
+            "Life Fitness Lateral Raise",
+            80
+          ],
+          [
+            "Nitroevo Lateral Raise",
+            80
+          ],
+          [
+            "Bar Raise",
+            40
+          ],
+          [
+            "Bell Raise",
+            20
+          ],
+          [
+            "Cable Raise",
+            20
+          ]
+        ]
+      ],
+      [
+        "PRESSES",
+        [
+          [
+            "Life Fitness Shoulder Press",
+            60
+          ],
+          [
+            "Nitroevo Overhead Press",
+            100
+          ],
+          [
+            "Matrix Converging Shoulder Press",
+            70
+          ],
+          [
+            "Bell Press",
+            50
+          ],
+          [
+            "Bar Press",
+            null
+          ]
+        ]
+      ],
+      [
+        "FLYS",
+        [
+          [
+            "Life Fitness Rear Deltoid Fly",
+            115
+          ],
+          [
+            "Bell Fly",
+            20
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "back",
+    "name": "Back",
+    "cardio": [
+      [
+        "Run",
+        "0 min"
+      ],
+      [
+        "Stairs",
+        "15 min"
+      ],
+      [
+        "Walk",
+        "0 min"
+      ]
+    ],
+    "sections": [
+      [
+        "LOW BACK 1 x (3 x 12)",
+        [
+          [
+            "Life Fitness Back Extension",
+            160
+          ],
+          [
+            "Matrix Back Extension",
+            150
+          ],
+          [
+            "Body Back Extension",
+            null
+          ]
+        ]
+      ],
+      [
+        "BACK 3 x (3 x 12)",
+        [
+          [
+            "Hammer Strength MTS High Row",
+            90
+          ],
+          [
+            "Life Fitness Machine Row",
+            115
+          ],
+          [
+            "Matrix Diverging Seater Row",
+            100
+          ],
+          [
+            "Life Fitness Cable Row",
+            65
+          ],
+          [
+            "Life Fitness Pulldown",
+            150
+          ],
+          [
+            "Nitroevo Lat Pulldown",
+            120
+          ],
+          [
+            "Hammer Strength Lat Pulldown",
+            145
+          ],
+          [
+            "Matrix Diverging Lat Pulldown",
+            120
+          ],
+          [
+            "Hammer Strength Iso-Lateral High Row",
+            90
+          ],
+          [
+            "Hammer Strength Iso-Lateral Low Row",
+            90
+          ],
+          [
+            "Hammer Strength Iso-Lateral Front Lat Pulldown",
+            90
+          ],
+          [
+            "Life Fitness Rear Deltoid Fly",
+            null
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "triceps",
+    "name": "Triceps",
+    "cardio": [
+      [
+        "Run",
+        "10 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "0 min"
+      ]
+    ],
+    "sections": [
+      [
+        "TRICEPS 3 x (3 x 6)",
+        [
+          [
+            "Hammer Strength Triceps Extension",
+            100
+          ],
+          [
+            "Matrix Triceps Extension",
+            120
+          ],
+          [
+            "Nitroevo Triceps Extension",
+            60
+          ],
+          [
+            "Life Fitness Triceps Press",
+            130
+          ],
+          [
+            "Body Dip",
+            null
+          ],
+          [
+            "Bar Press (Cable)",
+            50
+          ],
+          [
+            "Reverse Bar Press (Cable)",
+            42.5
+          ],
+          [
+            "Rope Press (Cable)",
+            42.5
+          ]
+        ]
+      ]
+    ]
+  }
+]
