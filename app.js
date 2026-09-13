@@ -250,7 +250,25 @@ function showProgress(filter='all'){
     }
     app.append(card);
   }
-  if(!any) app.append(el('div','card empty','No saved workout days yet. Complete a workout and tap Save Today.'));
+  if(!any){
+    const emptyCard = el('div','card');
+    const msg = el('div','empty','No saved workout days yet. Save a workout to start building comparisons.');
+    emptyCard.append(msg);
+
+    const cardioHdr = el('div','section-title','CARDIO PROGRESS');
+    cardioHdr.style.margin='12px -16px 0';
+    emptyCard.append(cardioHdr);
+    const cardioNote = el('div','empty','Run, Stairs, and Walk minutes will appear here after your first saved workout day.');
+    emptyCard.append(cardioNote);
+
+    const strengthHdr = el('div','section-title','STRENGTH PROGRESS');
+    strengthHdr.style.margin='12px -16px 0';
+    emptyCard.append(strengthHdr);
+    const strengthNote = el('div','empty','Exercise weights will appear here after your first saved workout day.');
+    emptyCard.append(strengthNote);
+
+    app.append(emptyCard);
+  }
   window.scrollTo(0,0);
 }
 

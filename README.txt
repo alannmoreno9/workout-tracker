@@ -30,3 +30,8 @@ VERSION 2
 - Cardio saved in daily snapshots.
 - Cardio D/D and M/M progress.
 - Migrates existing v1 strength data automatically.
+
+
+VERSION 3 UPDATE
+- Progress now shows CARDIO PROGRESS and STRENGTH PROGRESS placeholders even before any workout history exists.
+- This makes it clear from day one that both cardio minutes and lifting weights are being tracked.
