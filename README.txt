@@ -23,3 +23,10 @@ DATA MODEL
 
 BACKUPS
 Use Backup/Export periodically. Browser/site data can be erased by device cleanup, Safari settings, or moving to a new phone.
+
+
+VERSION 2
+- Editable yellow Run/Stairs/Walk minute fields.
+- Cardio saved in daily snapshots.
+- Cardio D/D and M/M progress.
+- Migrates existing v1 strength data automatically.

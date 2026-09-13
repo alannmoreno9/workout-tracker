@@ -1,19 +1,24 @@
 'use strict';
 
-const KEY = 'workout_tracker_pwa_secure_v1';
+const KEY = 'workout_tracker_pwa_secure_v2';
 let PLAN = [];
 let state = loadState();
 let currentWorkout = null;
 
-function defaultState(){ return {current:{}, checks:{}, history:[]}; }
+function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[]}; }
 function loadState(){
   try{
     const raw = localStorage.getItem(KEY);
-    if(!raw) return defaultState();
+    if(!raw){
+      const oldRaw=localStorage.getItem('workout_tracker_pwa_secure_v1');
+      if(oldRaw){ const old=JSON.parse(oldRaw); return {current:old.current||{},cardioCurrent:{},checks:old.checks||{},history:Array.isArray(old.history)?old.history.map(r=>({...r,cardio:r.cardio||{}})):[]}; }
+      return defaultState();
+    }
     const parsed = JSON.parse(raw);
     if(!parsed || typeof parsed !== 'object') return defaultState();
     return {
       current: parsed.current && typeof parsed.current === 'object' ? parsed.current : {},
+      cardioCurrent: parsed.cardioCurrent && typeof parsed.cardioCurrent === 'object' ? parsed.cardioCurrent : {},
       checks: parsed.checks && typeof parsed.checks === 'object' ? parsed.checks : {},
       history: Array.isArray(parsed.history) ? parsed.history : []
     };
@@ -38,6 +43,22 @@ function el(tag, cls, text){
   if(text !== undefined) node.textContent = text;
   return node;
 }
+
+function cardioKey(w,name){ return [w,'CARDIO',name].join('||'); }
+function defaultCardioMinutes(wid,name){
+  const w=PLAN.find(x=>x.id===wid), c=w?.cardio.find(x=>x[0]===name);
+  if(!c) return '';
+  const m=String(c[1]).match(/[\d.]+/); return m?Number(m[0]):'';
+}
+function getCardioMinutes(wid,name){
+  const key=cardioKey(wid,name);
+  return Object.prototype.hasOwnProperty.call(state.cardioCurrent,key)?state.cardioCurrent[key]:defaultCardioMinutes(wid,name);
+}
+function setCardioMinutes(key,value){
+  if(value==='') state.cardioCurrent[key]=''; else { const n=Number(value); state.cardioCurrent[key]=Number.isFinite(n)&&n>=0?n:''; }
+  persist();
+}
+
 function defaultWeight(wid, sec, ex){
   const w = PLAN.find(x=>x.id===wid);
   const s = w?.sections.find(x=>x[0]===sec);
@@ -76,7 +97,7 @@ function showHome(){
   for(const w of PLAN){
     const b=el('button','card workout-btn');
     b.type='button';
-    b.append(el('b',null,w.name),el('small',null,w.cardio.map(c=>c[0]+' '+c[1]).join(' • ')));
+    b.append(el('b',null,w.name),el('small',null,w.cardio.map(c=>c[0]+' '+getCardioMinutes(w.id,c[0])+' min').join(' • ')));
     b.addEventListener('click',()=>showWorkout(w.id));
     grid.append(b);
   }
@@ -99,8 +120,14 @@ function showWorkout(id){
   const cardio=sectionBox('CARDIO');
   for(const c of w.cardio){
     const row=el('div','row');
-    row.append(el('div','name',c[0]),el('div','time',c[1]));
-    cardio.append(row);
+    const name=el('div','name',c[0]);
+    const ctrls=el('div','controls');
+    const input=document.createElement('input');
+    input.className='weight cardio-input'; input.inputMode='decimal'; input.autocomplete='off';
+    input.value=getCardioMinutes(id,c[0]); input.placeholder='0';
+    input.setAttribute('aria-label','Minutes for '+c[0]);
+    input.addEventListener('change',()=>setCardioMinutes(cardioKey(id,c[0]),input.value));
+    ctrls.append(input,el('span','time','min')); row.append(name,ctrls); cardio.append(row);
   }
   app.append(cardio);
 
@@ -148,12 +175,13 @@ function clearChecks(id){
   persist('Checks cleared'); showWorkout(id);
 }
 function saveToday(id){
-  const w=PLAN.find(x=>x.id===id), date=today(), weights={};
+  const w=PLAN.find(x=>x.id===id), date=today(), weights={}, cardio={};
+  for(const [name] of w.cardio){ const v=getCardioMinutes(id,name); if(v!==''&&v!=null&&Number.isFinite(Number(v))) cardio[name]=Number(v); }
   for(const [sec,exs] of w.sections) for(const [ex] of exs){
     const v=getWeight(id,sec,ex);
     if(v!=='' && v!=null && Number.isFinite(Number(v))) weights[ex]=Number(v);
   }
-  const record={date,workout:id,weights};
+  const record={date,workout:id,cardio,weights};
   const idx=state.history.findIndex(x=>x.date===date&&x.workout===id);
   if(idx>=0) state.history[idx]=record; else state.history.push(record);
   state.history.sort((a,b)=>a.date.localeCompare(b.date));
@@ -199,6 +227,15 @@ function showProgress(filter='all'){
     const i=recs.length-1, cur=recs[i], prev=i>0?recs[i-1]:null, pm=previousMonthRecord(recs,i);
     const card=el('div','card'); card.style.marginTop='12px';
     card.append(el('b',null,w.name),el('div','note','Latest saved: '+cur.date));
+    const cardioHdr=el('div','section-title','CARDIO PROGRESS'); cardioHdr.style.margin='12px -16px 0'; card.append(cardioHdr);
+    for(const [name] of w.cardio){
+      const cv=cur.cardio?.[name]; if(cv==null) continue;
+      const [dd,dc]=deltaText(cv,prev?.cardio?.[name]); const [md,mc]=deltaText(cv,pm?.cardio?.[name]);
+      const metric=el('div','metric'), left=el('div'), right=el('div');
+      left.append(el('b',null,name),el('div','note',`Current: ${cv} min • Prior day: ${prev?.cardio?.[name] ?? '—'} • Prior month: ${pm?.cardio?.[name] ?? '—'}`));
+      right.append(el('div','delta '+dc,'D/D '+dd),el('div',null,''),el('div','delta '+mc,'M/M '+md)); metric.append(left,right); card.append(metric);
+    }
+    const strengthHdr=el('div','section-title','STRENGTH PROGRESS'); strengthHdr.style.margin='12px -16px 0'; card.append(strengthHdr);
     const names=[...new Set(w.sections.flatMap(s=>s[1].map(e=>e[0])))];
     for(const ex of names){
       const cv=cur.weights[ex]; if(cv==null) continue;
@@ -234,7 +271,7 @@ function showData(){
   for(const r of rows){
     const metric=el('div','metric');
     const left=el('div');
-    left.append(el('b',null,r.date),el('div','note',`${PLAN.find(w=>w.id===r.workout)?.name||r.workout} • ${Object.keys(r.weights||{}).length} exercises`));
+    left.append(el('b',null,r.date),el('div','note',`${PLAN.find(w=>w.id===r.workout)?.name||r.workout} • ${Object.keys(r.cardio||{}).length} cardio • ${Object.keys(r.weights||{}).length} exercises`));
     const del=el('button','secondary','Delete'); del.type='button';
     del.addEventListener('click',()=>deleteRecord(r.date,r.workout));
     metric.append(left,del); card.append(metric);
@@ -261,8 +298,9 @@ function importBackup(file){
       if(!x || typeof x!=='object' || !Array.isArray(x.history)) throw new Error('bad');
       state={
         current:x.current&&typeof x.current==='object'?x.current:{},
+        cardioCurrent:x.cardioCurrent&&typeof x.cardioCurrent==='object'?x.cardioCurrent:{},
         checks:x.checks&&typeof x.checks==='object'?x.checks:{},
-        history:x.history
+        history:x.history.map(r=>({...r,cardio:r.cardio||{}}))
       };
       persist('Backup imported'); showData();
     }catch(_){ alert('Could not read that backup file.'); }

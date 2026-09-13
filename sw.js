@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='workout-tracker-secure-v1';
+const CACHE='workout-tracker-secure-v2';
 const ASSETS=['./','./index.html','./styles.css','./app.js','./plan.json','./manifest.webmanifest'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)))});
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([
