@@ -35,3 +35,11 @@ VERSION 2
 VERSION 3 UPDATE
 - Progress now shows CARDIO PROGRESS and STRENGTH PROGRESS placeholders even before any workout history exists.
 - This makes it clear from day one that both cardio minutes and lifting weights are being tracked.
+
+
+VERSION 4 UPDATE
+- Added custom Workout app icon for iPhone Home Screen and PWA installs.
+
+
+VERSION 5 UPDATE
+- Replaced the app icon with the dumbbell-only icon (multiple plates).
