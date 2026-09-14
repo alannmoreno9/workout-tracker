@@ -30,3 +30,5 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 .body-weight-history{margin-top:8px;border-top:1px solid var(--border)}
 .body-weight-history-row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
 .body-weight-history-row:last-child{border-bottom:0}
+
+.body-weight-status{text-align:center;margin-top:10px;font-size:13px;font-weight:700;color:var(--muted)}

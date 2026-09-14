@@ -3,6 +3,11 @@
 const KEY = 'workout_tracker_pwa_secure_v2';
 let PLAN = [];
 let state = loadState();
+state.current = state.current && typeof state.current === 'object' ? state.current : {};
+state.cardioCurrent = state.cardioCurrent && typeof state.cardioCurrent === 'object' ? state.cardioCurrent : {};
+state.checks = state.checks && typeof state.checks === 'object' ? state.checks : {};
+state.history = Array.isArray(state.history) ? state.history : [];
+state.bodyWeightHistory = Array.isArray(state.bodyWeightHistory) ? state.bodyWeightHistory : [];
 let currentWorkout = null;
 
 function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[], bodyWeightHistory:[]}; }
@@ -11,7 +16,7 @@ function loadState(){
     const raw = localStorage.getItem(KEY);
     if(!raw){
       const oldRaw=localStorage.getItem('workout_tracker_pwa_secure_v1');
-      if(oldRaw){ const old=JSON.parse(oldRaw); return {current:old.current||{},cardioCurrent:{},checks:old.checks||{},history:Array.isArray(old.history)?old.history.map(r=>({...r,cardio:r.cardio||{}})):[]}; }
+      if(oldRaw){ const old=JSON.parse(oldRaw); return {current:old.current||{},cardioCurrent:{},checks:old.checks||{},history:Array.isArray(old.history)?old.history.map(r=>({...r,cardio:r.cardio||{}})):[],bodyWeightHistory:Array.isArray(old.bodyWeightHistory)?old.bodyWeightHistory:[]}; }
       return defaultState();
     }
     const parsed = JSON.parse(raw);
@@ -92,13 +97,14 @@ function saveBodyWeight(value){
     toast('Enter a valid weight');
     return false;
   }
+  if(!Array.isArray(state.bodyWeightHistory)) state.bodyWeightHistory=[];
   const date=today();
   const rec={date,weight:n};
-  const idx=(state.bodyWeightHistory||[]).findIndex(x=>x.date===date);
+  const idx=state.bodyWeightHistory.findIndex(x=>x.date===date);
   if(idx>=0) state.bodyWeightHistory[idx]=rec;
   else state.bodyWeightHistory.push(rec);
   state.bodyWeightHistory.sort((a,b)=>a.date.localeCompare(b.date));
-  persist(idx>=0 ? 'Today’s body weight updated' : 'Today’s body weight saved');
+  persist(idx>=0 ? 'Weight updated for today' : 'Weight saved for today');
   return true;
 }
 function previousBodyWeightMonthRecord(recs,i){
@@ -149,6 +155,10 @@ function showHome(){
     if(saveBodyWeight(bodyInput.value)) showHome();
   });
   weightCard.append(weightTop,saveWeight);
+  const savedToday=bodyWeightForDate(today());
+  const status=el('div','body-weight-status',
+    savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
+  weightCard.append(status);
   app.append(weightCard);
 
   const grid=el('div','grid');

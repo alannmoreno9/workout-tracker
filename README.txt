@@ -65,3 +65,10 @@ VERSION 8 UPDATE
   - Import backup
   - Export backup
 - All other app features and saved-data behavior remain unchanged.
+
+
+VERSION 9 FIX
+- Fixed body-weight saving for installs migrated from older app versions.
+- Body-weight storage is now normalized defensively before every save.
+- Added a visible Home-screen status showing whether today's body weight is saved.
+- All existing workout, cardio, progress, backup, and icon features remain unchanged.
