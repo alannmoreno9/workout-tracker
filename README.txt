@@ -57,3 +57,11 @@ VERSION 6 UPDATE
 VERSION 7 UPDATE
 - Uses the final selected app icon: dark blue background with bright white dumbbell and three plates per side.
 - Body Weight, Cardio Progress, Strength Progress, Backup/Import, and all prior tracking features remain unchanged.
+
+
+VERSION 8 UPDATE
+- Removed the blue Backup button from the top-right header.
+- Backup functions now live only under Data:
+  - Import backup
+  - Export backup
+- All other app features and saved-data behavior remain unchanged.

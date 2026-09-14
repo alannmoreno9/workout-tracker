@@ -454,7 +454,6 @@ async function init(){
   document.getElementById('navHome').addEventListener('click',showHome);
   document.getElementById('navProgress').addEventListener('click',()=>showProgress());
   document.getElementById('navData').addEventListener('click',showData);
-  document.getElementById('backupBtn').addEventListener('click',backup);
   document.getElementById('importFile').addEventListener('change',e=>{
     const f=e.target.files?.[0]; if(f) importBackup(f); e.target.value='';
   });
