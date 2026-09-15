@@ -16,11 +16,11 @@ let weekendMakeupDay = null;
 const DAY_LABELS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const WEEKDAY_PLANS = {
-  1: {label:'Chest + Biceps', workouts:['chest','biceps','abs']},
-  2: {label:'Legs', workouts:['legs','abs']},
-  3: {label:'Back + Triceps', workouts:['back','triceps','abs']},
-  4: {label:'Legs', workouts:['legs','abs']},
-  5: {label:'Shoulders + Traps', workouts:['shoulders','traps','abs']}
+  1: {label:'Chest + Biceps', workouts:['chest','biceps','abs','cardio']},
+  2: {label:'Legs', workouts:['legs','abs','cardio']},
+  3: {label:'Back + Triceps', workouts:['back','triceps','abs','cardio']},
+  4: {label:'Legs', workouts:['legs','abs','cardio']},
+  5: {label:'Shoulders + Traps', workouts:['shoulders','traps','abs','cardio']}
 };
 
 function scheduleForDay(day){
@@ -167,7 +167,7 @@ function showHome(){
     ? `${dayName} — ${schedule.label}`
     : `${dayName} — Make-up Day`;
   const heroText = schedule
-    ? 'Cardio and Abs are available every workout day.'
+    ? 'Abs and Cardio are available every workout day.'
     : 'Choose the weekday workout you want to make up.';
   hero.append(el('h2',null,heroTitle),el('p',null,heroText));
   app.append(hero);
@@ -231,7 +231,9 @@ function showHome(){
       b.type='button';
       const small = id==='abs'
         ? 'Every day'
-        : w.cardio.map(c=>c[0]+' '+getCardioMinutes(w.id,c[0])+' min').join(' • ');
+        : id==='cardio'
+        ? w.cardio.map(c=>c[0]+' '+getCardioMinutes(w.id,c[0])+' min').join(' • ')
+        : 'Strength workout';
       b.append(el('b',null,w.name),el('small',null,small));
       b.addEventListener('click',()=>showWorkout(w.id));
       grid.append(b);

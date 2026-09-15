@@ -65,6 +65,25 @@
     ]
   },
   {
+    "id": "cardio",
+    "name": "Cardio",
+    "cardio": [
+      [
+        "Run",
+        "10 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "5 min"
+      ]
+    ],
+    "sections": []
+  },
+  {
     "id": "biceps",
     "name": "Biceps & Forearms",
     "cardio": [

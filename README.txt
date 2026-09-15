@@ -87,3 +87,15 @@ VERSION 10 UPDATE
 - Added MON-SUN day navigation with the current day selected automatically.
 - Existing exercise/current values/history remain tied to the same workout/exercise IDs.
 - Backup import now preserves Body Weight history.
+
+
+VERSION 11 UPDATE
+- Added a dedicated Cardio workout box to the daily schedule.
+- Cardio now appears as its own Home-screen card every workout day.
+- Monday: Chest + Biceps + Abs + Cardio.
+- Tuesday: Legs + Abs + Cardio.
+- Wednesday: Back + Triceps + Abs + Cardio.
+- Thursday: Legs + Abs + Cardio.
+- Friday: Shoulders + Traps + Abs + Cardio.
+- Saturday/Sunday make-up schedules also include Cardio.
+- Added a standalone Cardio workout page for easier daily cardio entry.
