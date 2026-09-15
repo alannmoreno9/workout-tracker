@@ -72,3 +72,18 @@ VERSION 9 FIX
 - Body-weight storage is now normalized defensively before every save.
 - Added a visible Home-screen status showing whether today's body weight is saved.
 - All existing workout, cardio, progress, backup, and icon features remain unchanged.
+
+
+VERSION 10 UPDATE
+- Added automatic day-of-week workout scheduling.
+- Monday: Chest + Biceps.
+- Tuesday: Legs.
+- Wednesday: Back + Triceps.
+- Thursday: Legs.
+- Friday: Shoulders + Traps.
+- Saturday/Sunday: flexible make-up days; choose any weekday plan.
+- Abs remains available every workout day.
+- Added Traps with Bar Shrugs, Dumbbell Shrugs, and Cable Shrugs.
+- Added MON-SUN day navigation with the current day selected automatically.
+- Existing exercise/current values/history remain tied to the same workout/exercise IDs.
+- Backup import now preserves Body Weight history.

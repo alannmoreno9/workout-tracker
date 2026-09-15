@@ -10,6 +10,25 @@ state.history = Array.isArray(state.history) ? state.history : [];
 state.bodyWeightHistory = Array.isArray(state.bodyWeightHistory) ? state.bodyWeightHistory : [];
 let currentWorkout = null;
 
+let selectedDay = new Date().getDay();
+let weekendMakeupDay = null;
+
+const DAY_LABELS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const WEEKDAY_PLANS = {
+  1: {label:'Chest + Biceps', workouts:['chest','biceps','abs']},
+  2: {label:'Legs', workouts:['legs','abs']},
+  3: {label:'Back + Triceps', workouts:['back','triceps','abs']},
+  4: {label:'Legs', workouts:['legs','abs']},
+  5: {label:'Shoulders + Traps', workouts:['shoulders','traps','abs']}
+};
+
+function scheduleForDay(day){
+  if(day>=1 && day<=5) return WEEKDAY_PLANS[day];
+  if(weekendMakeupDay) return WEEKDAY_PLANS[weekendMakeupDay];
+  return null;
+}
+
 function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[], bodyWeightHistory:[]}; }
 function loadState(){
   try{
@@ -127,12 +146,50 @@ function clearApp(){ document.getElementById('app').replaceChildren(); }
 function showHome(){
   currentWorkout=null; setNav('Home');
   document.getElementById('title').textContent='Workout Tracker';
-  document.getElementById('subtitle').textContent='One saved snapshot per workout day';
+  document.getElementById('subtitle').textContent='Your weekly workout schedule';
   clearApp();
   const app=document.getElementById('app');
+
+  const daybar=el('div','daybar');
+  DAY_LABELS.forEach((label,day)=>{
+    const b=el('button','day-pill'+(selectedDay===day?' active':''),label);
+    b.type='button';
+    if(day===new Date().getDay()) b.classList.add('today');
+    b.addEventListener('click',()=>{ selectedDay=day; showHome(); });
+    daybar.append(b);
+  });
+  app.append(daybar);
+
+  const schedule=scheduleForDay(selectedDay);
   const hero=el('div','hero');
-  hero.append(el('h2',null,'Choose your workout'),el('p',null,'Edit weights during the workout, then tap Save Today once.'));
+  const dayName=DAY_NAMES[selectedDay];
+  const heroTitle = schedule
+    ? `${dayName} — ${schedule.label}`
+    : `${dayName} — Make-up Day`;
+  const heroText = schedule
+    ? 'Cardio and Abs are available every workout day.'
+    : 'Choose the weekday workout you want to make up.';
+  hero.append(el('h2',null,heroTitle),el('p',null,heroText));
   app.append(hero);
+
+  if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
+    const makeup=el('div','card makeup-card');
+    makeup.append(el('b',null,'Choose a make-up workout'));
+    const makeupGrid=el('div','makeup-grid');
+    for(let d=1; d<=5; d++){
+      const b=el('button','secondary makeup-btn',`${DAY_LABELS[d]} • ${WEEKDAY_PLANS[d].label}`);
+      b.type='button';
+      b.addEventListener('click',()=>{ weekendMakeupDay=d; showHome(); });
+      makeupGrid.append(b);
+    }
+    makeup.append(makeupGrid);
+    app.append(makeup);
+  } else if((selectedDay===0 || selectedDay===6) && weekendMakeupDay){
+    const change=el('button','secondary change-makeup','Change make-up workout');
+    change.type='button';
+    change.addEventListener('click',()=>{ weekendMakeupDay=null; showHome(); });
+    app.append(change);
+  }
 
   const weightCard=el('div','card body-weight-card');
   const weightTop=el('div','body-weight-top');
@@ -161,17 +218,41 @@ function showHome(){
   weightCard.append(status);
   app.append(weightCard);
 
-  const grid=el('div','grid');
+  if(schedule){
+    const heading=el('div','schedule-heading');
+    heading.append(el('b',null,'Today’s workouts'),el('span',null,'Tap a section to start'));
+    app.append(heading);
+
+    const grid=el('div','grid');
+    for(const id of schedule.workouts){
+      const w=PLAN.find(x=>x.id===id);
+      if(!w) continue;
+      const b=el('button','card workout-btn');
+      b.type='button';
+      const small = id==='abs'
+        ? 'Every day'
+        : w.cardio.map(c=>c[0]+' '+getCardioMinutes(w.id,c[0])+' min').join(' • ');
+      b.append(el('b',null,w.name),el('small',null,small));
+      b.addEventListener('click',()=>showWorkout(w.id));
+      grid.append(b);
+    }
+    app.append(grid);
+  }
+
+  const allToggle=el('details','all-workouts');
+  const summary=el('summary',null,'All workouts');
+  allToggle.append(summary);
+  const allGrid=el('div','grid all-grid');
   for(const w of PLAN){
     const b=el('button','card workout-btn');
     b.type='button';
-    b.append(el('b',null,w.name),el('small',null,w.cardio.map(c=>c[0]+' '+getCardioMinutes(w.id,c[0])+' min').join(' • ')));
+    b.append(el('b',null,w.name),el('small',null,'Open workout'));
     b.addEventListener('click',()=>showWorkout(w.id));
-    grid.append(b);
+    allGrid.append(b);
   }
-  app.append(grid);
+  allToggle.append(allGrid);
+  app.append(allToggle);
 }
-
 function sectionBox(title, cls=''){
   const box=el('div','section');
   box.append(el('div','section-title '+cls,title));
@@ -443,7 +524,8 @@ function importBackup(file){
         current:x.current&&typeof x.current==='object'?x.current:{},
         cardioCurrent:x.cardioCurrent&&typeof x.cardioCurrent==='object'?x.cardioCurrent:{},
         checks:x.checks&&typeof x.checks==='object'?x.checks:{},
-        history:x.history.map(r=>({...r,cardio:r.cardio||{}}))
+        history:x.history.map(r=>({...r,cardio:r.cardio||{}})),
+        bodyWeightHistory:Array.isArray(x.bodyWeightHistory)?x.bodyWeightHistory:[]
       };
       persist('Backup imported'); showData();
     }catch(_){ alert('Could not read that backup file.'); }

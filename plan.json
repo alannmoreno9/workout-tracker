@@ -254,7 +254,7 @@
         []
       ],
       [
-        "BUTT - NO SAGGING❗",
+        "BUTT - NO SAGGING\u2757",
         [
           [
             "Life Fitness Hip Adduction",
@@ -275,7 +275,7 @@
         ]
       ],
       [
-        "LEGS - NO TOP HEAVY❗",
+        "LEGS - NO TOP HEAVY\u2757",
         [
           [
             "Life Fitness Leg Extension",
@@ -292,7 +292,7 @@
         ]
       ],
       [
-        "CALFS - NO CHICKEN LEGS❗",
+        "CALFS - NO CHICKEN LEGS\u2757",
         [
           [
             "Life Fitness Calf Extension",
@@ -313,7 +313,7 @@
         ]
       ],
       [
-        "TEST BOOSTER - BE A MAN❗",
+        "TEST BOOSTER - BE A MAN\u2757",
         [
           [
             "Life Fitness Seated Leg Press",
@@ -413,6 +413,43 @@
           [
             "Bell Fly",
             20
+          ]
+        ]
+      ]
+    ]
+  },
+  {
+    "id": "traps",
+    "name": "Traps",
+    "cardio": [
+      [
+        "Run",
+        "10 min"
+      ],
+      [
+        "Stairs",
+        "0 min"
+      ],
+      [
+        "Walk",
+        "5 min"
+      ]
+    ],
+    "sections": [
+      [
+        "TRAPS",
+        [
+          [
+            "Bar Shrugs",
+            null
+          ],
+          [
+            "Dumbbell Shrugs",
+            null
+          ],
+          [
+            "Cable Shrugs",
+            null
           ]
         ]
       ]
