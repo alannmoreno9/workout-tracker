@@ -57,3 +57,6 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 .day-workout-top small{color:var(--muted);font-size:13px}
 .day-workout-list{display:flex;flex-direction:column;gap:10px}
 .day-workout-item{padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:#f8fafc;font-weight:800;color:#0B3F66}
+
+.day-workout-btn.simplified{margin-top:14px}
+.day-workout-btn.simplified .day-workout-top b{font-size:21px}

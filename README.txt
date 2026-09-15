@@ -108,3 +108,11 @@ VERSION 12 UPDATE
 - Tapping the day box opens a combined day view.
 - The combined day view renders sections in this order: Cardio, Abs, then the scheduled workout(s).
 - Save Today on the combined day view saves the full day’s workout parts together.
+
+
+VERSION 13 UI CLEANUP
+- Removed the large repeated day/workout hero card from Home.
+- Removed the separate “Today’s workout” heading above the daily card.
+- The selected weekday tab now provides the day context.
+- Home now shows one clean workout card with Today’s Workout, Cardio, Abs, and the scheduled strength workout.
+- Reduced repeated day/workout labels while preserving the same workout flow and saved data.

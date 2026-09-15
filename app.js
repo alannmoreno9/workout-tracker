@@ -285,16 +285,6 @@ function showHome(){
   app.append(daybar);
 
   const schedule=scheduleForDay(selectedDay);
-  const hero=el('div','hero');
-  const dayName=DAY_NAMES[selectedDay];
-  const heroTitle = schedule
-    ? `${dayName} — ${schedule.label}`
-    : `${dayName} — Make-up Day`;
-  const heroText = schedule
-    ? 'One box per day. Tap it to open the full workout.'
-    : 'Choose the weekday workout you want to make up.';
-  hero.append(el('h2',null,heroTitle),el('p',null,heroText));
-  app.append(hero);
 
   if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
     const makeup=el('div','card makeup-card');
@@ -337,26 +327,18 @@ function showHome(){
   });
   weightCard.append(weightTop,saveWeight);
   const savedToday=bodyWeightForDate(today());
-  const status=el('div','body-weight-status',
-    savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
+  const status=el('div','body-weight-status', savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
   weightCard.append(status);
   app.append(weightCard);
 
   if(schedule){
-    const heading=el('div','schedule-heading');
-    heading.append(el('b',null,'Today’s workout'),el('span',null,'Cardio → Abs → Workout'));
-    app.append(heading);
-
-    const dayCard=el('button','card day-workout-btn');
+    const dayCard=el('button','card day-workout-btn simplified');
     dayCard.type='button';
     const top=el('div','day-workout-top');
-    top.append(el('b',null,schedule.label),el('small',null,'Tap to start'));
+    top.append(el('b',null,'Today’s Workout'),el('small',null,'Tap to start'));
     dayCard.append(top);
-
     const list=el('div','day-workout-list');
-    for(const name of dayWorkoutDisplayItems(schedule)){
-      list.append(el('div','day-workout-item',name));
-    }
+    for(const name of ['Cardio','Abs',schedule.label]) list.append(el('div','day-workout-item',name));
     dayCard.append(list);
     dayCard.addEventListener('click',()=>showDayWorkout(selectedDay));
     app.append(dayCard);
