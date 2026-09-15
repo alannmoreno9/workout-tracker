@@ -99,3 +99,12 @@ VERSION 11 UPDATE
 - Friday: Shoulders + Traps + Abs + Cardio.
 - Saturday/Sunday make-up schedules also include Cardio.
 - Added a standalone Cardio workout page for easier daily cardio entry.
+
+
+VERSION 12 UPDATE
+- Removed the separate daily Abs and Cardio boxes from the Home schedule.
+- Each day now shows one larger workout box for a cleaner layout.
+- The daily workout box lists items in this order: Cardio, Abs, then the main workout(s).
+- Tapping the day box opens a combined day view.
+- The combined day view renders sections in this order: Cardio, Abs, then the scheduled workout(s).
+- Save Today on the combined day view saves the full day’s workout parts together.

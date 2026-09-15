@@ -16,11 +16,11 @@ let weekendMakeupDay = null;
 const DAY_LABELS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const WEEKDAY_PLANS = {
-  1: {label:'Chest + Biceps', workouts:['chest','biceps','abs','cardio']},
-  2: {label:'Legs', workouts:['legs','abs','cardio']},
-  3: {label:'Back + Triceps', workouts:['back','triceps','abs','cardio']},
-  4: {label:'Legs', workouts:['legs','abs','cardio']},
-  5: {label:'Shoulders + Traps', workouts:['shoulders','traps','abs','cardio']}
+  1: {label:'Chest + Biceps', workouts:['cardio','abs','chest','biceps']},
+  2: {label:'Legs', workouts:['cardio','abs','legs']},
+  3: {label:'Back + Triceps', workouts:['cardio','abs','back','triceps']},
+  4: {label:'Legs', workouts:['cardio','abs','legs']},
+  5: {label:'Shoulders + Traps', workouts:['cardio','abs','shoulders','traps']}
 };
 
 function scheduleForDay(day){
@@ -137,6 +137,130 @@ function previousBodyWeightMonthRecord(recs,i){
   return candidates.at(-1)||null;
 }
 
+
+function scheduleWorkoutObjects(schedule){
+  return (schedule?.workouts || []).map(id=>PLAN.find(x=>x.id===id)).filter(Boolean);
+}
+function dayWorkoutDisplayItems(schedule){
+  return scheduleWorkoutObjects(schedule).map(w=>w.name);
+}
+function appendExerciseSections(container,id){
+  const w=PLAN.find(x=>x.id===id);
+  if(!w) return;
+  for(const [sec,exs] of w.sections){
+    const box=sectionBox(sec, sec.includes(' x (') ? '' : 'subsection');
+    for(const [ex] of exs){
+      const key=k(id,sec,ex);
+      const row=el('div','row'+(state.checks[key]?' done':''));
+      const nameWrap=el('div'); nameWrap.append(el('div','name',ex));
+      const ctrls=el('div','controls');
+      const weight=document.createElement('input');
+      weight.className='weight'; weight.inputMode='decimal'; weight.autocomplete='off';
+      weight.value=getWeight(id,sec,ex); weight.placeholder='—';
+      weight.setAttribute('aria-label','Weight for '+ex);
+      weight.addEventListener('change',()=>setWeight(key,weight.value));
+      const check=document.createElement('input');
+      check.type='checkbox'; check.className='check'; check.checked=!!state.checks[key];
+      check.setAttribute('aria-label','Completed '+ex);
+      check.addEventListener('change',()=>{
+        state.checks[key]=check.checked; persist();
+        row.classList.toggle('done',check.checked);
+      });
+      ctrls.append(weight,check); row.append(nameWrap,ctrls); box.append(row);
+    }
+    container.append(box);
+  }
+}
+function clearChecksMany(ids){
+  for(const key of Object.keys(state.checks))
+    if(ids.some(id=>key.startsWith(id+'||'))) delete state.checks[key];
+  persist('Checks cleared');
+}
+function buildSharedCardioRecord(){
+  const cardioPlan=PLAN.find(x=>x.id==='cardio');
+  const cardio={};
+  if(!cardioPlan) return cardio;
+  for(const [name] of cardioPlan.cardio){
+    const v=getCardioMinutes('cardio',name);
+    if(v!==''&&v!=null&&Number.isFinite(Number(v))) cardio[name]=Number(v);
+  }
+  return cardio;
+}
+function saveRecord(id, sharedCardio=null){
+  const w=PLAN.find(x=>x.id===id);
+  if(!w) return;
+  const date=today(), weights={};
+  const cardio=id==='cardio'
+    ? buildSharedCardioRecord()
+    : (sharedCardio ? {...sharedCardio} : {});
+  for(const [sec,exs] of w.sections) for(const [ex] of exs){
+    const v=getWeight(id,sec,ex);
+    if(v!=='' && v!=null && Number.isFinite(Number(v))) weights[ex]=Number(v);
+  }
+  const record={date,workout:id,cardio,weights};
+  const idx=state.history.findIndex(x=>x.date===date&&x.workout===id);
+  if(idx>=0) state.history[idx]=record; else state.history.push(record);
+}
+function showDayWorkout(day){
+  const schedule=scheduleForDay(day);
+  if(!schedule){ showHome(); return; }
+  currentWorkout='day-'+day; setNav('Home');
+  document.getElementById('title').textContent=DAY_NAMES[day]+' Workout';
+  document.getElementById('subtitle').textContent=schedule.label+' • Today: '+today();
+  clearApp(); const app=document.getElementById('app');
+
+  const intro=el('div','hero day-hero');
+  intro.append(el('h2',null,schedule.label),el('p',null,'Cardio first, then Abs, then your workout.'));
+  app.append(intro);
+
+  const actions=el('div','actions');
+  const clear=el('button','secondary','Clear checks'); clear.type='button';
+  const save=el('button','primary','Save Today'); save.type='button';
+  clear.addEventListener('click',()=>{
+    clearChecksMany(schedule.workouts.filter(id=>id!=='cardio'));
+    showDayWorkout(day);
+  });
+  save.addEventListener('click',()=>saveDayWorkout(day));
+  actions.append(clear,save); app.append(actions);
+
+  const cardioPlan=PLAN.find(x=>x.id==='cardio');
+  if(cardioPlan){
+    const cardio=sectionBox('CARDIO');
+    for(const c of cardioPlan.cardio){
+      const row=el('div','row');
+      const name=el('div','name',c[0]);
+      const ctrls=el('div','controls');
+      const input=document.createElement('input');
+      input.className='weight cardio-input'; input.inputMode='decimal'; input.autocomplete='off';
+      input.value=getCardioMinutes('cardio',c[0]); input.placeholder='0';
+      input.setAttribute('aria-label','Minutes for '+c[0]);
+      input.addEventListener('change',()=>setCardioMinutes(cardioKey('cardio',c[0]),input.value));
+      ctrls.append(input,el('span','time','min')); row.append(name,ctrls); cardio.append(row);
+    }
+    app.append(cardio);
+  }
+
+  for(const wid of schedule.workouts.filter(id=>id!=='cardio')){
+    appendExerciseSections(app,wid);
+  }
+
+  const note=el('p','note');
+  note.append('Changing yellow fields updates your working values only. ');
+  const strong=el('b',null,'Save Today');
+  note.append(strong,' stores snapshots for the workout parts in this day.');
+  app.append(note);
+  window.scrollTo(0,0);
+}
+function saveDayWorkout(day){
+  const schedule=scheduleForDay(day);
+  if(!schedule) return;
+  const sharedCardio=buildSharedCardioRecord();
+  for(const id of schedule.workouts){
+    saveRecord(id, sharedCardio);
+  }
+  state.history.sort((a,b)=>a.date.localeCompare(b.date));
+  persist('Today’s workout saved');
+}
 function setNav(active){
   for(const n of ['Home','Progress','Data'])
     document.getElementById('nav'+n).classList.toggle('active', n===active);
@@ -167,7 +291,7 @@ function showHome(){
     ? `${dayName} — ${schedule.label}`
     : `${dayName} — Make-up Day`;
   const heroText = schedule
-    ? 'Abs and Cardio are available every workout day.'
+    ? 'One box per day. Tap it to open the full workout.'
     : 'Choose the weekday workout you want to make up.';
   hero.append(el('h2',null,heroTitle),el('p',null,heroText));
   app.append(hero);
@@ -220,29 +344,26 @@ function showHome(){
 
   if(schedule){
     const heading=el('div','schedule-heading');
-    heading.append(el('b',null,'Today’s workouts'),el('span',null,'Tap a section to start'));
+    heading.append(el('b',null,'Today’s workout'),el('span',null,'Cardio → Abs → Workout'));
     app.append(heading);
 
-    const grid=el('div','grid');
-    for(const id of schedule.workouts){
-      const w=PLAN.find(x=>x.id===id);
-      if(!w) continue;
-      const b=el('button','card workout-btn');
-      b.type='button';
-      const small = id==='abs'
-        ? 'Every day'
-        : id==='cardio'
-        ? w.cardio.map(c=>c[0]+' '+getCardioMinutes(w.id,c[0])+' min').join(' • ')
-        : 'Strength workout';
-      b.append(el('b',null,w.name),el('small',null,small));
-      b.addEventListener('click',()=>showWorkout(w.id));
-      grid.append(b);
+    const dayCard=el('button','card day-workout-btn');
+    dayCard.type='button';
+    const top=el('div','day-workout-top');
+    top.append(el('b',null,schedule.label),el('small',null,'Tap to start'));
+    dayCard.append(top);
+
+    const list=el('div','day-workout-list');
+    for(const name of dayWorkoutDisplayItems(schedule)){
+      list.append(el('div','day-workout-item',name));
     }
-    app.append(grid);
+    dayCard.append(list);
+    dayCard.addEventListener('click',()=>showDayWorkout(selectedDay));
+    app.append(dayCard);
   }
 
   const allToggle=el('details','all-workouts');
-  const summary=el('summary',null,'All workouts');
+  const summary=el('summary',null,'All individual workouts');
   allToggle.append(summary);
   const allGrid=el('div','grid all-grid');
   for(const w of PLAN){
