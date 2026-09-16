@@ -143,3 +143,11 @@ VERSION 15 TIP ROTATION UPGRADE
 - Chest + Biceps, Back + Triceps, and Shoulders + Traps each cycle through 20 total tips.
 - Legs cycles through 20 total tips.
 - Tip rotation now advances deterministically by workout week rather than random/date modulo selection, preventing early repeats.
+
+
+VERSION 16 WEEKEND LAYOUT CONSISTENCY
+- Moved the Saturday/Sunday make-up workout selector below the Body Weight card.
+- Home now keeps the same top layout every day:
+  weekday tabs -> rotating workout tip -> Body Weight.
+- Weekend make-up controls appear after Body Weight instead of pushing it down.
+- No workout history, body-weight data, tip rotation, or exercise values were changed.

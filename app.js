@@ -417,25 +417,6 @@ function showHome(){
   const tip=el('div','workout-tip',rotatingWorkoutTip(selectedDay,schedule));
   app.append(tip);
 
-  if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
-    const makeup=el('div','card makeup-card');
-    makeup.append(el('b',null,'Choose a make-up workout'));
-    const makeupGrid=el('div','makeup-grid');
-    for(let d=1; d<=5; d++){
-      const b=el('button','secondary makeup-btn',`${DAY_LABELS[d]} • ${WEEKDAY_PLANS[d].label}`);
-      b.type='button';
-      b.addEventListener('click',()=>{ weekendMakeupDay=d; showHome(); });
-      makeupGrid.append(b);
-    }
-    makeup.append(makeupGrid);
-    app.append(makeup);
-  } else if((selectedDay===0 || selectedDay===6) && weekendMakeupDay){
-    const change=el('button','secondary change-makeup','Change make-up workout');
-    change.type='button';
-    change.addEventListener('click',()=>{ weekendMakeupDay=null; showHome(); });
-    app.append(change);
-  }
-
   const weightCard=el('div','card body-weight-card');
   const weightTop=el('div','body-weight-top');
   const weightText=el('div');
@@ -461,6 +442,25 @@ function showHome(){
   const status=el('div','body-weight-status', savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
   weightCard.append(status);
   app.append(weightCard);
+
+  if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
+    const makeup=el('div','card makeup-card');
+    makeup.append(el('b',null,'Choose a make-up workout'));
+    const makeupGrid=el('div','makeup-grid');
+    for(let d=1; d<=5; d++){
+      const b=el('button','secondary makeup-btn',`${DAY_LABELS[d]} • ${WEEKDAY_PLANS[d].label}`);
+      b.type='button';
+      b.addEventListener('click',()=>{ weekendMakeupDay=d; showHome(); });
+      makeupGrid.append(b);
+    }
+    makeup.append(makeupGrid);
+    app.append(makeup);
+  } else if((selectedDay===0 || selectedDay===6) && weekendMakeupDay){
+    const change=el('button','secondary change-makeup','Change make-up workout');
+    change.type='button';
+    change.addEventListener('click',()=>{ weekendMakeupDay=null; showHome(); });
+    app.append(change);
+  }
 
   if(schedule){
     const dayCard=el('button','card day-workout-btn simplified');
