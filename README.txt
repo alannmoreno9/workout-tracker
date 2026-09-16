@@ -151,3 +151,14 @@ VERSION 16 WEEKEND LAYOUT CONSISTENCY
   weekday tabs -> rotating workout tip -> Body Weight.
 - Weekend make-up controls appear after Body Weight instead of pushing it down.
 - No workout history, body-weight data, tip rotation, or exercise values were changed.
+
+
+VERSION 17 HOME CARD CONTEXT
+- Added a “Last completed” line to the daily workout card.
+- Added a visual completion bar to the daily workout card.
+- Completion is based on the day’s high-level sections:
+  - Cardio
+  - Abs
+  - Main workout block
+- Added a tiny weekly counter showing how many workout days have been saved in the current week.
+- No changes were made to workout history, body-weight data, exercise values, or tip rotation.

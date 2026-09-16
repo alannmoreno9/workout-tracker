@@ -396,6 +396,55 @@ function setNav(active){
 }
 function clearApp(){ document.getElementById('app').replaceChildren(); }
 
+
+function formatShortDate(dateStr){
+  try{
+    const d=new Date(dateStr+'T12:00:00');
+    return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  }catch(_){ return dateStr; }
+}
+function dayDisplaySections(schedule){
+  if(!schedule) return [];
+  return [
+    {label:'Cardio', ids:['cardio']},
+    {label:'Abs', ids:['abs']},
+    {label:schedule.label, ids:schedule.workouts.filter(id=>!['cardio','abs'].includes(id))}
+  ].filter(section=>section.ids.length);
+}
+function hasRecordForDateWorkout(date,wid){
+  return (state.history||[]).some(r=>r.date===date && r.workout===wid);
+}
+function countCompletedDisplaySections(schedule,date=today()){
+  const sections=dayDisplaySections(schedule);
+  let completed=0;
+  for(const section of sections){
+    const done=section.ids.every(id=>hasRecordForDateWorkout(date,id));
+    if(done) completed++;
+  }
+  return {completed,total:sections.length};
+}
+function lastCompletedDayDate(schedule){
+  if(!schedule) return '';
+  const sections=dayDisplaySections(schedule);
+  const dates=[...new Set((state.history||[]).map(r=>r.date))].sort((a,b)=>b.localeCompare(a));
+  for(const date of dates){
+    const done=sections.every(section=>section.ids.every(id=>hasRecordForDateWorkout(date,id)));
+    if(done) return date;
+  }
+  return '';
+}
+function workoutDaysThisWeek(){
+  const now=new Date();
+  const day=now.getDay();
+  const mondayOffset=(day+6)%7;
+  const weekStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()-mondayOffset);
+  const weekEnd=new Date(weekStart.getFullYear(),weekStart.getMonth(),weekStart.getDate()+6);
+  const startStr=weekStart.toLocaleDateString('en-CA');
+  const endStr=weekEnd.toLocaleDateString('en-CA');
+  const dates=[...new Set((state.history||[]).map(r=>r.date))];
+  return dates.filter(date=>date>=startStr && date<=endStr).length;
+}
+
 function showHome(){
   currentWorkout=null; setNav('Home');
   document.getElementById('title').textContent='Workout Tracker';
@@ -468,9 +517,36 @@ function showHome(){
     const top=el('div','day-workout-top');
     top.append(el('b',null,'Today’s Workout'),el('small',null,'Tap to start'));
     dayCard.append(top);
+
     const list=el('div','day-workout-list');
     for(const name of ['Cardio','Abs',schedule.label]) list.append(el('div','day-workout-item',name));
     dayCard.append(list);
+
+    const progressInfo=countCompletedDisplaySections(schedule);
+    const progressWrap=el('div','day-progress-wrap');
+    const progressMeta=el('div','day-progress-meta');
+    const completedText=progressInfo.total
+      ? `${progressInfo.completed} of ${progressInfo.total} sections completed today`
+      : 'No sections scheduled';
+    progressMeta.append(el('span',null,completedText));
+    progressWrap.append(progressMeta);
+
+    const progressBar=el('div','day-progress-bar');
+    const progressFill=el('div','day-progress-fill');
+    progressFill.style.width=(progressInfo.total ? (progressInfo.completed/progressInfo.total)*100 : 0)+'%';
+    progressBar.append(progressFill);
+    progressWrap.append(progressBar);
+    dayCard.append(progressWrap);
+
+    const details=el('div','day-extra-meta');
+    const lastDate=lastCompletedDayDate(schedule);
+    const weekCount=workoutDaysThisWeek();
+    details.append(
+      el('span',null,lastDate ? `Last completed: ${formatShortDate(lastDate)}` : 'Last completed: —'),
+      el('span',null,`This week: ${weekCount} day${weekCount===1?'':'s'}`)
+    );
+    dayCard.append(details);
+
     dayCard.addEventListener('click',()=>showDayWorkout(selectedDay));
     app.append(dayCard);
   }
