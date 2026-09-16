@@ -251,3 +251,12 @@ VERSION 27 DAILY COMPLETION = 5 ITEMS
 - Header now starts at 0/5 and advances as each item is completed.
 - The main workout block counts as one item even on split days such as Chest + Biceps.
 - No saved history, sleep calculations, workout plan, body-weight data, or tip rotation changed.
+
+
+VERSION 28 DAILY STRUCTURE
+- Home is now ordered: Sleep, Body Weight, Cardio, Exercise.
+- Cardio is a separate daily card.
+- Cardio options: Run, Stairs, Walk, Box.
+- Exercise contains Abs plus the scheduled strength workout.
+- Header remains a 5-item daily completion tracker: Sleep, Body Weight, Cardio, Abs, Main Workout.
+- Progress is now ordered: Sleep, Body Weight, Cardio, Exercise.

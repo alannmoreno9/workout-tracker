@@ -342,7 +342,7 @@ function showDayWorkout(day){
   clearApp(); const app=document.getElementById('app');
 
   const intro=el('div','hero day-hero');
-  intro.append(el('h2',null,schedule.label),el('p',null,'Cardio first, then Abs, then your workout.'));
+  intro.append(el('h2',null,'Exercise'),el('p',null,`Abs → ${schedule.label}`));
   app.append(intro);
 
   const actions=el('div','actions');
@@ -355,22 +355,6 @@ function showDayWorkout(day){
   save.addEventListener('click',()=>saveDayWorkout(day));
   actions.append(clear,save); app.append(actions);
 
-  const cardioPlan=PLAN.find(x=>x.id==='cardio');
-  if(cardioPlan){
-    const cardio=sectionBox('CARDIO');
-    for(const c of cardioPlan.cardio){
-      const row=el('div','row');
-      const name=el('div','name',c[0]);
-      const ctrls=el('div','controls');
-      const input=document.createElement('input');
-      input.className='weight cardio-input'; input.inputMode='decimal'; input.autocomplete='off';
-      input.value=getCardioMinutes('cardio',c[0]); input.placeholder='0';
-      input.setAttribute('aria-label','Minutes for '+c[0]);
-      input.addEventListener('change',()=>setCardioMinutes(cardioKey('cardio',c[0]),input.value));
-      ctrls.append(input,el('span','time','min')); row.append(name,ctrls); cardio.append(row);
-    }
-    app.append(cardio);
-  }
 
   for(const wid of schedule.workouts.filter(id=>id!=='cardio')){
     appendExerciseSections(app,wid);
@@ -379,16 +363,15 @@ function showDayWorkout(day){
   const note=el('p','note');
   note.append('Changing yellow fields updates your working values only. ');
   const strong=el('b',null,'Save Today');
-  note.append(strong,' stores snapshots for the workout parts in this day.');
+  note.append(strong,' stores your Abs and strength workout for today.');
   app.append(note);
   window.scrollTo(0,0);
 }
 function saveDayWorkout(day){
   const schedule=scheduleForDay(day);
   if(!schedule) return;
-  const sharedCardio=buildSharedCardioRecord();
-  for(const id of schedule.workouts){
-    saveRecord(id, sharedCardio);
+  for(const id of schedule.workouts.filter(id=>id!=='cardio')){
+    saveRecord(id, {});
   }
   state.history.sort((a,b)=>a.date.localeCompare(b.date));
   persist('Today’s workout saved');
@@ -504,11 +487,10 @@ function countCompletedDisplaySections(schedule,date=today()){
 }
 function lastCompletedDayDate(schedule){
   if(!schedule) return '';
-  const sections=dayDisplaySections(schedule);
+  const exerciseIds=schedule.workouts.filter(id=>id!=='cardio');
   const dates=[...new Set((state.history||[]).map(r=>r.date))].sort((a,b)=>b.localeCompare(a));
   for(const date of dates){
-    const done=sections.every(section=>section.ids.every(id=>hasRecordForDateWorkout(date,id)));
-    if(done) return date;
+    if(exerciseIds.every(id=>hasRecordForDateWorkout(date,id))) return date;
   }
   return '';
 }
@@ -655,15 +637,28 @@ function showHome(){
   }
 
   if(schedule){
-    const dayCard=el('button','card day-workout-btn simplified');
-    dayCard.type='button';
-    const top=el('div','day-workout-top day-workout-top-compact');
-    top.append(el('small',null,'Tap to start'));
-    dayCard.append(top);
+    const cardioCard=el('button','card daily-section-card');
+    cardioCard.type='button';
+    const cardioTop=el('div','daily-section-top');
+    cardioTop.append(el('b',null,'Cardio'),el('small',null,'Tap to start'));
+    cardioCard.append(cardioTop);
+    const cardioItems=el('div','daily-cardio-list');
+    for(const name of ['Run','Stairs','Walk','Box']){
+      cardioItems.append(el('span','daily-cardio-chip',name));
+    }
+    cardioCard.append(cardioItems);
+    cardioCard.addEventListener('click',()=>showWorkout('cardio'));
+    app.append(cardioCard);
+
+    const exerciseCard=el('button','card day-workout-btn simplified exercise-card');
+    exerciseCard.type='button';
+    const exerciseTop=el('div','day-workout-top day-workout-top-compact');
+    exerciseTop.append(el('b',null,'Exercise'),el('small',null,'Tap to start'));
+    exerciseCard.append(exerciseTop);
 
     const list=el('div','day-workout-list');
-    for(const name of ['Cardio','Abs',schedule.label]) list.append(el('div','day-workout-item',name));
-    dayCard.append(list);
+    for(const name of ['Abs',schedule.label]) list.append(el('div','day-workout-item',name));
+    exerciseCard.append(list);
 
     const details=el('div','day-extra-meta');
     const lastDate=lastCompletedDayDate(schedule);
@@ -672,10 +667,10 @@ function showHome(){
       el('span',null,lastDate ? `Last completed: ${formatShortDate(lastDate)}` : 'Last completed: —'),
       el('span',null,`This week: ${weekCount} day${weekCount===1?'':'s'}`)
     );
-    dayCard.append(details);
+    exerciseCard.append(details);
 
-    dayCard.addEventListener('click',()=>showDayWorkout(selectedDay));
-    app.append(dayCard);
+    exerciseCard.addEventListener('click',()=>showDayWorkout(selectedDay));
+    app.append(exerciseCard);
   }
 
   const allToggle=el('details','all-workouts');
@@ -799,126 +794,80 @@ function showProgress(filter='all'){
   const hp=document.getElementById('headerProgress'); if(hp) hp.style.display='none';
   setNav('Progress');
   document.getElementById('title').textContent='Progress';
-  document.getElementById('subtitle').textContent='Day-over-day and month-over-month';
+  document.getElementById('subtitle').textContent='Sleep, body weight, cardio, and exercise';
   clearApp(); const app=document.getElementById('app');
 
-  const toolbar=el('div','toolbar');
-  const all=el('button','pill'+(filter==='all'?' active':''),'All');
-  all.type='button'; all.addEventListener('click',()=>showProgress('all')); toolbar.append(all);
-  for(const w of PLAN){
-    const p=el('button','pill'+(filter===w.id?' active':''),w.name);
-    p.type='button'; p.addEventListener('click',()=>showProgress(w.id)); toolbar.append(p);
-  }
-  app.append(toolbar);
-
-  const bwRecs=bodyWeightRecords();
-  const bwCard=el('div','card');
-  bwCard.style.marginTop='12px';
-  const bwHdr=el('div','section-title','BODY WEIGHT PROGRESS');
-  bwHdr.style.margin='-16px -16px 12px';
-  bwCard.append(bwHdr);
-
-  if(!bwRecs.length){
-    bwCard.append(el('div','empty','No body weight saved yet. Enter your scale weight on Home and tap Save Weight.'));
-  }else{
-    const bi=bwRecs.length-1, bcur=bwRecs[bi], bprev=bi>0?bwRecs[bi-1]:null, bpm=previousBodyWeightMonthRecord(bwRecs,bi);
-    const [bdd,bdc]=deltaText(bcur.weight,bprev?.weight);
-    const [bmd,bmc]=deltaText(bcur.weight,bpm?.weight);
-    const metric=el('div','metric');
-    const left=el('div');
-    left.append(
-      el('b',null,`${bcur.weight} lb`),
-      el('div','note',`Latest: ${bcur.date} • Prior day: ${bprev?.weight ?? '—'} lb • Prior month: ${bpm?.weight ?? '—'} lb`)
-    );
-    const right=el('div');
-    right.append(el('div','delta '+bdc,'D/D '+bdd),el('div',null,''),el('div','delta '+bmc,'M/M '+bmd));
-    metric.append(left,right);
-    bwCard.append(metric);
-
-    const recent=el('div','body-weight-history');
-    for(const rec of [...bwRecs].reverse().slice(0,7)){
-      const r=el('div','body-weight-history-row');
-      r.append(el('span',null,rec.date),el('b',null,`${rec.weight} lb`));
-      recent.append(r);
-    }
-    bwCard.append(recent);
-  }
-  app.append(bwCard);
-
   const sleepRecs=sleepRecords();
-  const sleepProgress=el('div','card'); sleepProgress.style.marginTop='12px';
-  const sleepHdr=el('div','section-title','SLEEP PROGRESS'); sleepHdr.style.margin='-16px -16px 12px';
-  sleepProgress.append(sleepHdr);
+  const sleepProgress=el('div','card progress-group');
+  const sleepHdr=el('div','section-title','SLEEP'); sleepHdr.style.margin='-16px -16px 12px'; sleepProgress.append(sleepHdr);
   if(!sleepRecs.length){
-    sleepProgress.append(el('div','empty','No sleep saved yet. Enter Bedtime and Waketime on Home.'));
+    sleepProgress.append(el('div','empty','No sleep saved yet.'));
   }else{
     const latest=sleepRecs.at(-1), avg7=sleep7DayAverage();
     const metric=el('div','metric'), left=el('div'), right=el('div');
-    left.append(el('b',null,`${latest.hours} hr`),
-      el('div','note',`Latest: ${latest.date} • Bed ${latest.bedtime} • Wake ${latest.wakeTime}${latest.quality?' • '+latest.quality:''}`));
+    left.append(el('b',null,`${latest.hours} hr`),el('div','note',`Latest: ${latest.date} • Bed ${latest.bedtime} • Wake ${latest.wakeTime}${latest.quality?' • '+latest.quality:''}`));
     right.append(el('div','delta flat',`7D avg ${avg7} hr`));
     metric.append(left,right); sleepProgress.append(metric);
-    const recent=el('div','body-weight-history');
-    for(const r of [...sleepRecs].reverse().slice(0,7)){
-      const row=el('div','body-weight-history-row');
-      row.append(el('span',null,r.date),el('b',null,`${r.hours} hr${r.quality?' • '+r.quality:''}`));
-      recent.append(row);
-    }
-    sleepProgress.append(recent);
   }
   app.append(sleepProgress);
 
-  let any=false;
-  for(const w of PLAN.filter(x=>filter==='all'||x.id===filter)){
-    const recs=recsFor(w.id); if(!recs.length) continue; any=true;
-    const i=recs.length-1, cur=recs[i], prev=i>0?recs[i-1]:null, pm=previousMonthRecord(recs,i);
-    const card=el('div','card'); card.style.marginTop='12px';
-    card.append(el('b',null,w.name),el('div','note','Latest saved: '+cur.date));
-    const cardioHdr=el('div','section-title','CARDIO PROGRESS'); cardioHdr.style.margin='12px -16px 0'; card.append(cardioHdr);
-    for(const [name] of w.cardio){
+  const bwRecs=bodyWeightRecords();
+  const bwCard=el('div','card progress-group'); bwCard.style.marginTop='12px';
+  const bwHdr=el('div','section-title','BODY WEIGHT'); bwHdr.style.margin='-16px -16px 12px'; bwCard.append(bwHdr);
+  if(!bwRecs.length){
+    bwCard.append(el('div','empty','No body weight saved yet.'));
+  }else{
+    const bi=bwRecs.length-1, bcur=bwRecs[bi], bprev=bi>0?bwRecs[bi-1]:null, bpm=previousBodyWeightMonthRecord(bwRecs,bi);
+    const [bdd,bdc]=deltaText(bcur.weight,bprev?.weight), [bmd,bmc]=deltaText(bcur.weight,bpm?.weight);
+    const metric=el('div','metric'), left=el('div'), right=el('div');
+    left.append(el('b',null,`${bcur.weight} lb`),el('div','note',`Latest: ${bcur.date} • Prior day: ${bprev?.weight ?? '—'} lb • Prior month: ${bpm?.weight ?? '—'} lb`));
+    right.append(el('div','delta '+bdc,'D/D '+bdd),el('div',null,''),el('div','delta '+bmc,'M/M '+bmd));
+    metric.append(left,right); bwCard.append(metric);
+  }
+  app.append(bwCard);
+
+  const cardioPlan=PLAN.find(x=>x.id==='cardio');
+  const cardioCard=el('div','card progress-group'); cardioCard.style.marginTop='12px';
+  const cardioHdr=el('div','section-title','CARDIO'); cardioHdr.style.margin='-16px -16px 12px'; cardioCard.append(cardioHdr);
+  const cardioRecs=recsFor('cardio');
+  if(!cardioRecs.length){
+    cardioCard.append(el('div','empty','No cardio saved yet.'));
+  }else{
+    const i=cardioRecs.length-1, cur=cardioRecs[i], prev=i>0?cardioRecs[i-1]:null, pm=previousMonthRecord(cardioRecs,i);
+    for(const [name] of (cardioPlan?.cardio||[])){
       const cv=cur.cardio?.[name]; if(cv==null) continue;
-      const [dd,dc]=deltaText(cv,prev?.cardio?.[name]); const [md,mc]=deltaText(cv,pm?.cardio?.[name]);
+      const [dd,dc]=deltaText(cv,prev?.cardio?.[name]), [md,mc]=deltaText(cv,pm?.cardio?.[name]);
       const metric=el('div','metric'), left=el('div'), right=el('div');
-      left.append(el('b',null,name),el('div','note',`Current: ${cv} min • Prior day: ${prev?.cardio?.[name] ?? '—'} • Prior month: ${pm?.cardio?.[name] ?? '—'}`));
-      right.append(el('div','delta '+dc,'D/D '+dd),el('div',null,''),el('div','delta '+mc,'M/M '+md)); metric.append(left,right); card.append(metric);
+      left.append(el('b',null,name),el('div','note',`Current: ${cv} min • Prior: ${prev?.cardio?.[name] ?? '—'} • Prior month: ${pm?.cardio?.[name] ?? '—'}`));
+      right.append(el('div','delta '+dc,'D/D '+dd),el('div',null,''),el('div','delta '+mc,'M/M '+md));
+      metric.append(left,right); cardioCard.append(metric);
     }
-    const strengthHdr=el('div','section-title','STRENGTH PROGRESS'); strengthHdr.style.margin='12px -16px 0'; card.append(strengthHdr);
+  }
+  app.append(cardioCard);
+
+  const exerciseCard=el('div','card progress-group'); exerciseCard.style.marginTop='12px';
+  const exerciseHdr=el('div','section-title','EXERCISE'); exerciseHdr.style.margin='-16px -16px 12px'; exerciseCard.append(exerciseHdr);
+  let anyExercise=false;
+  for(const w of PLAN.filter(x=>x.id!=='cardio')){
+    const recs=recsFor(w.id); if(!recs.length) continue;
+    anyExercise=true;
+    const i=recs.length-1, cur=recs[i], prev=i>0?recs[i-1]:null, pm=previousMonthRecord(recs,i);
+    exerciseCard.append(el('div','exercise-progress-title',w.name));
     const names=[...new Set(w.sections.flatMap(s=>s[1].map(e=>e[0])))];
     for(const ex of names){
-      const cv=cur.weights[ex]; if(cv==null) continue;
-      const [dd,dc]=deltaText(cv,prev?.weights?.[ex]);
-      const [md,mc]=deltaText(cv,pm?.weights?.[ex]);
-      const metric=el('div','metric');
-      const left=el('div'); left.append(el('b',null,ex),el('div','note',
-        `Current: ${cv} • Prior day: ${prev?.weights?.[ex] ?? '—'} • Prior month: ${pm?.weights?.[ex] ?? '—'}`));
-      const right=el('div');
+      const cv=cur.weights?.[ex]; if(cv==null) continue;
+      const [dd,dc]=deltaText(cv,prev?.weights?.[ex]), [md,mc]=deltaText(cv,pm?.weights?.[ex]);
+      const metric=el('div','metric'), left=el('div'), right=el('div');
+      left.append(el('b',null,ex),el('div','note',`Current: ${cv} • Prior: ${prev?.weights?.[ex] ?? '—'} • Prior month: ${pm?.weights?.[ex] ?? '—'}`));
       right.append(el('div','delta '+dc,'D/D '+dd),el('div',null,''),el('div','delta '+mc,'M/M '+md));
-      metric.append(left,right); card.append(metric);
+      metric.append(left,right); exerciseCard.append(metric);
     }
-    app.append(card);
   }
-  if(!any){
-    const emptyCard = el('div','card');
-    const msg = el('div','empty','No saved workout days yet. Save a workout to start building comparisons.');
-    emptyCard.append(msg);
+  if(!anyExercise) exerciseCard.append(el('div','empty','No exercise workouts saved yet.'));
+  app.append(exerciseCard);
 
-    const cardioHdr = el('div','section-title','CARDIO PROGRESS');
-    cardioHdr.style.margin='12px -16px 0';
-    emptyCard.append(cardioHdr);
-    const cardioNote = el('div','empty','Run, Stairs, and Walk minutes will appear here after your first saved workout day.');
-    emptyCard.append(cardioNote);
-
-    const strengthHdr = el('div','section-title','STRENGTH PROGRESS');
-    strengthHdr.style.margin='12px -16px 0';
-    emptyCard.append(strengthHdr);
-    const strengthNote = el('div','empty','Exercise weights will appear here after your first saved workout day.');
-    emptyCard.append(strengthNote);
-
-    app.append(emptyCard);
-  }
   window.scrollTo(0,0);
 }
-
 function showData(){
   const hp=document.getElementById('headerProgress'); if(hp) hp.style.display='none';
   setNav('Data');
@@ -1036,7 +985,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=27',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=28',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }

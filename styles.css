@@ -102,3 +102,12 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 
 
 .sleep-time-input{-webkit-appearance:menulist;appearance:auto}
+
+.daily-section-card{width:100%;text-align:left;margin-bottom:14px}
+.daily-section-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.daily-section-top b{font-size:20px;color:var(--navy)}
+.daily-section-top small{font-size:13px;color:var(--muted)}
+.daily-cardio-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.daily-cardio-chip{display:inline-block;padding:8px 11px;border:1px solid var(--border);border-radius:999px;background:#f8fafc;font-size:13px;font-weight:800;color:var(--navy)}
+.exercise-card{margin-top:0}
+.exercise-progress-title{font-size:15px;font-weight:900;color:var(--navy);padding:12px 0 4px;border-top:1px solid var(--border)}
