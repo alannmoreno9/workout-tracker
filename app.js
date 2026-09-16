@@ -488,13 +488,19 @@ function hasRecordForDateWorkout(date,wid){
   return (state.history||[]).some(r=>r.date===date && r.workout===wid);
 }
 function countCompletedDisplaySections(schedule,date=today()){
-  const sections=dayDisplaySections(schedule);
+  if(!schedule) return {completed:0,total:5};
+
   let completed=0;
-  for(const section of sections){
-    const done=section.ids.every(id=>hasRecordForDateWorkout(date,id));
-    if(done) completed++;
-  }
-  return {completed,total:sections.length};
+
+  if((state.sleepHistory||[]).some(r=>r.date===date)) completed++;
+  if((state.bodyWeightHistory||[]).some(r=>r.date===date)) completed++;
+  if(hasRecordForDateWorkout(date,'cardio')) completed++;
+  if(hasRecordForDateWorkout(date,'abs')) completed++;
+
+  const mainIds=schedule.workouts.filter(id=>!['cardio','abs'].includes(id));
+  if(mainIds.length && mainIds.every(id=>hasRecordForDateWorkout(date,id))) completed++;
+
+  return {completed,total:5};
 }
 function lastCompletedDayDate(schedule){
   if(!schedule) return '';
@@ -1030,7 +1036,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=26',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=27',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }

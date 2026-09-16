@@ -238,3 +238,16 @@ VERSION 26 UPDATE RELIABILITY FIX
 - Service worker registration is explicitly versioned.
 - Bedtime and Waketime remain 15-minute-only selectors (:00, :15, :30, :45).
 - Fixed 15-minute fall-asleep estimate remains unchanged.
+
+
+VERSION 27 DAILY COMPLETION = 5 ITEMS
+- Updated the header progress from 3 daily items to 5.
+- The five daily completion items are:
+  1. Sleep saved
+  2. Body Weight saved
+  3. Cardio saved
+  4. Abs saved
+  5. Main workout block saved
+- Header now starts at 0/5 and advances as each item is completed.
+- The main workout block counts as one item even on split days such as Chest + Biceps.
+- No saved history, sleep calculations, workout plan, body-weight data, or tip rotation changed.
