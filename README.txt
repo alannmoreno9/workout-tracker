@@ -204,3 +204,11 @@ VERSION 21 SLEEP LABELS
 VERSION 22 SLEEP LABEL CONSISTENCY
 - Changed the sleep note from “saved to wake-up date” to “saved to Waketime date”.
 - No other sleep, workout, history, body-weight, or progress behavior changed.
+
+
+VERSION 23 MORNING FLOW
+- Reordered the Home screen morning flow:
+  1. Sleep
+  2. Body Weight
+  3. Workout
+- No sleep calculations, saved data, workout history, body-weight history, tips, or progress logic changed.

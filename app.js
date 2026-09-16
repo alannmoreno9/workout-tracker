@@ -517,32 +517,6 @@ function showHome(){
   const tip=el('div','workout-tip',rotatingWorkoutTip(selectedDay,schedule));
   app.append(tip);
 
-  const weightCard=el('div','card body-weight-card');
-  const weightTop=el('div','body-weight-top');
-  const weightText=el('div');
-  weightText.append(el('b',null,'Body Weight'),el('div','note','Scale weight • one saved value per day'));
-  const weightControls=el('div','body-weight-controls');
-  const bodyInput=document.createElement('input');
-  bodyInput.className='weight body-weight-input';
-  bodyInput.inputMode='decimal';
-  bodyInput.autocomplete='off';
-  bodyInput.placeholder='—';
-  bodyInput.value=bodyWeightForDate(today());
-  bodyInput.setAttribute('aria-label','Body weight in pounds');
-  const lbs=el('span','time','lb');
-  weightControls.append(bodyInput,lbs);
-  weightTop.append(weightText,weightControls);
-  const saveWeight=el('button','primary body-weight-save','Save Weight');
-  saveWeight.type='button';
-  saveWeight.addEventListener('click',()=>{
-    if(saveBodyWeight(bodyInput.value)) showHome();
-  });
-  weightCard.append(weightTop,saveWeight);
-  const savedToday=bodyWeightForDate(today());
-  const status=el('div','body-weight-status', savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
-  weightCard.append(status);
-  app.append(weightCard);
-
   const sleepCard=el('div','card sleep-card');
   const sleepTitle=el('div','sleep-title-row');
   sleepTitle.append(el('b',null,'Sleep'),el('span','sleep-latency','30 min to fall asleep • saved to Waketime date'));
@@ -588,6 +562,33 @@ function showHome(){
   sleepCard.append(el('div','sleep-status',
     sleepRec?`Saved today: ${sleepRec.hours} hr${sleepRec.quality?' • '+sleepRec.quality:''}`:'Not saved for today yet'));
   app.append(sleepCard);
+
+
+  const weightCard=el('div','card body-weight-card');
+  const weightTop=el('div','body-weight-top');
+  const weightText=el('div');
+  weightText.append(el('b',null,'Body Weight'),el('div','note','Scale weight • one saved value per day'));
+  const weightControls=el('div','body-weight-controls');
+  const bodyInput=document.createElement('input');
+  bodyInput.className='weight body-weight-input';
+  bodyInput.inputMode='decimal';
+  bodyInput.autocomplete='off';
+  bodyInput.placeholder='—';
+  bodyInput.value=bodyWeightForDate(today());
+  bodyInput.setAttribute('aria-label','Body weight in pounds');
+  const lbs=el('span','time','lb');
+  weightControls.append(bodyInput,lbs);
+  weightTop.append(weightText,weightControls);
+  const saveWeight=el('button','primary body-weight-save','Save Weight');
+  saveWeight.type='button';
+  saveWeight.addEventListener('click',()=>{
+    if(saveBodyWeight(bodyInput.value)) showHome();
+  });
+  weightCard.append(weightTop,saveWeight);
+  const savedToday=bodyWeightForDate(today());
+  const status=el('div','body-weight-status', savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
+  weightCard.append(status);
+  app.append(weightCard);
 
   if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
     const makeup=el('div','card makeup-card');
