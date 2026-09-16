@@ -162,3 +162,9 @@ VERSION 17 HOME CARD CONTEXT
   - Main workout block
 - Added a tiny weekly counter showing how many workout days have been saved in the current week.
 - No changes were made to workout history, body-weight data, exercise values, or tip rotation.
+
+
+VERSION 18 UI CLEANUP
+- Removed the redundant “Today’s Workout” heading from the daily workout card.
+- Kept the small “Tap to start” cue in the top-right.
+- No changes were made to workout history, completion tracking, tips, body weight, or exercise values.

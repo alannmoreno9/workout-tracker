@@ -514,8 +514,8 @@ function showHome(){
   if(schedule){
     const dayCard=el('button','card day-workout-btn simplified');
     dayCard.type='button';
-    const top=el('div','day-workout-top');
-    top.append(el('b',null,'Today’s Workout'),el('small',null,'Tap to start'));
+    const top=el('div','day-workout-top day-workout-top-compact');
+    top.append(el('small',null,'Tap to start'));
     dayCard.append(top);
 
     const list=el('div','day-workout-list');
