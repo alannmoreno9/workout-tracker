@@ -168,3 +168,12 @@ VERSION 18 UI CLEANUP
 - Removed the redundant “Today’s Workout” heading from the daily workout card.
 - Kept the small “Tap to start” cue in the top-right.
 - No changes were made to workout history, completion tracking, tips, body weight, or exercise values.
+
+
+VERSION 19 HEADER PROGRESS
+- Moved the daily completion status into the top-right header next to Workout Tracker.
+- Header now shows a compact completed/total count with a thin progress bar.
+- Removed the large completion text and progress bar from the daily workout card.
+- Kept Last completed and This week in the workout card.
+- Progress still tracks Cardio, Abs, and the main workout block.
+- No workout history, body-weight data, tips, or exercise values were changed.

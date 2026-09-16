@@ -80,3 +80,9 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 .day-progress-bar{height:10px;border-radius:999px;background:#e6e9ee;overflow:hidden}
 .day-progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#2F7D22,#4aa43a)}
 .day-extra-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;font-weight:800;color:#455468}
+
+
+.header-progress{width:92px;flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.header-progress-count{font-size:13px;font-weight:900;color:#fff;line-height:1}
+.header-progress-track{width:92px;height:7px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden}
+.header-progress-fill{height:100%;width:0;background:#fff;border-radius:999px;transition:width .25s ease}

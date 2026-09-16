@@ -332,6 +332,7 @@ function saveRecord(id, sharedCardio=null){
 }
 function showDayWorkout(day){
   const schedule=scheduleForDay(day);
+  updateHeaderProgress(schedule);
   if(!schedule){ showHome(); return; }
   currentWorkout='day-'+day; setNav('Home');
   document.getElementById('title').textContent=DAY_NAMES[day]+' Workout';
@@ -445,6 +446,22 @@ function workoutDaysThisWeek(){
   return dates.filter(date=>date>=startStr && date<=endStr).length;
 }
 
+
+function updateHeaderProgress(schedule){
+  const wrap=document.getElementById('headerProgress');
+  const count=document.getElementById('headerProgressCount');
+  const fill=document.getElementById('headerProgressFill');
+  if(!wrap || !count || !fill) return;
+  if(!schedule){
+    wrap.style.display='none';
+    return;
+  }
+  wrap.style.display='';
+  const info=countCompletedDisplaySections(schedule);
+  count.textContent=`${info.completed}/${info.total}`;
+  fill.style.width=(info.total ? (info.completed/info.total)*100 : 0)+'%';
+}
+
 function showHome(){
   currentWorkout=null; setNav('Home');
   document.getElementById('title').textContent='Workout Tracker';
@@ -463,6 +480,7 @@ function showHome(){
   app.append(daybar);
 
   const schedule=scheduleForDay(selectedDay);
+  updateHeaderProgress(schedule);
   const tip=el('div','workout-tip',rotatingWorkoutTip(selectedDay,schedule));
   app.append(tip);
 
@@ -522,22 +540,6 @@ function showHome(){
     for(const name of ['Cardio','Abs',schedule.label]) list.append(el('div','day-workout-item',name));
     dayCard.append(list);
 
-    const progressInfo=countCompletedDisplaySections(schedule);
-    const progressWrap=el('div','day-progress-wrap');
-    const progressMeta=el('div','day-progress-meta');
-    const completedText=progressInfo.total
-      ? `${progressInfo.completed} of ${progressInfo.total} sections completed today`
-      : 'No sections scheduled';
-    progressMeta.append(el('span',null,completedText));
-    progressWrap.append(progressMeta);
-
-    const progressBar=el('div','day-progress-bar');
-    const progressFill=el('div','day-progress-fill');
-    progressFill.style.width=(progressInfo.total ? (progressInfo.completed/progressInfo.total)*100 : 0)+'%';
-    progressBar.append(progressFill);
-    progressWrap.append(progressBar);
-    dayCard.append(progressWrap);
-
     const details=el('div','day-extra-meta');
     const lastDate=lastCompletedDayDate(schedule);
     const weekCount=workoutDaysThisWeek();
@@ -572,6 +574,7 @@ function sectionBox(title, cls=''){
 }
 
 function showWorkout(id){
+  const hp=document.getElementById('headerProgress'); if(hp) hp.style.display='none';
   currentWorkout=id; setNav('Home');
   const w=PLAN.find(x=>x.id===id);
   document.getElementById('title').textContent=w.name;
@@ -668,6 +671,7 @@ function deltaText(a,b){
 }
 
 function showProgress(filter='all'){
+  const hp=document.getElementById('headerProgress'); if(hp) hp.style.display='none';
   setNav('Progress');
   document.getElementById('title').textContent='Progress';
   document.getElementById('subtitle').textContent='Day-over-day and month-over-month';
@@ -768,6 +772,7 @@ function showProgress(filter='all'){
 }
 
 function showData(){
+  const hp=document.getElementById('headerProgress'); if(hp) hp.style.display='none';
   setNav('Data');
   document.getElementById('title').textContent='Data';
   document.getElementById('subtitle').textContent='Backups and saved workout days';
