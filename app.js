@@ -1030,7 +1030,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=26',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }

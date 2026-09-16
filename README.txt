@@ -229,3 +229,12 @@ VERSION 25 SLEEP TIMING STANDARD
 - Changed the fixed estimated time to fall asleep from 30 minutes to 15 minutes.
 - Sleeptime now subtracts 15 minutes from the Bedtime-to-Waketime interval.
 - No workout, body-weight, progress, backup, or tip behavior changed.
+
+
+VERSION 26 UPDATE RELIABILITY FIX
+- Fixed stale iPhone/PWA caching that could keep an older app.js loaded after deployment.
+- Added explicit v26 cache-busting to app.js and styles.css.
+- Service worker now uses network-first loading with cached offline fallback.
+- Service worker registration is explicitly versioned.
+- Bedtime and Waketime remain 15-minute-only selectors (:00, :15, :30, :45).
+- Fixed 15-minute fall-asleep estimate remains unchanged.
