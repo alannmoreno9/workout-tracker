@@ -116,3 +116,30 @@ VERSION 13 UI CLEANUP
 - The selected weekday tab now provides the day context.
 - Home now shows one clean workout card with Today’s Workout, Cardio, Abs, and the scheduled strength workout.
 - Reduced repeated day/workout labels while preserving the same workout flow and saved data.
+
+
+VERSION 14 ROTATING WORKOUT TIPS
+- Added a rotating workout-specific coaching sentence directly below the weekday tabs.
+- Tips are matched to the selected workout:
+  - Chest + Biceps
+  - Legs
+  - Back + Triceps
+  - Shoulders + Traps
+- Each workout has a bank of 10 tips covering form, effort, control, and training best practices.
+- The displayed tip changes automatically with the date so the same workout does not always show the same message.
+- Weekend make-up days use the selected make-up workout’s tip bank.
+- No workout history, body-weight data, or exercise values were changed.
+
+
+VERSION 15 TIP ROTATION UPGRADE
+- Split coaching tips by muscle group instead of combined day banks.
+- Chest: 10 tips.
+- Biceps: 10 tips.
+- Legs: 20 tips.
+- Back: 10 tips.
+- Triceps: 10 tips.
+- Shoulders: 10 tips.
+- Traps: 10 tips.
+- Chest + Biceps, Back + Triceps, and Shoulders + Traps each cycle through 20 total tips.
+- Legs cycles through 20 total tips.
+- Tip rotation now advances deterministically by workout week rather than random/date modulo selection, preventing early repeats.

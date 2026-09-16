@@ -23,6 +23,135 @@ const WEEKDAY_PLANS = {
   5: {label:'Shoulders + Traps', workouts:['cardio','abs','shoulders','traps']}
 };
 
+const MUSCLE_TIPS = {
+  chest: [
+    'Don’t chase the number—control the weight, squeeze hard, and make the chest do the work.',
+    'Keep your shoulders down and back so your chest stays in charge during presses.',
+    'Lower the weight under control; the stretch is part of the rep.',
+    'Pause and squeeze at the top instead of bouncing through the movement.',
+    'Use a full range you can control from stretch to contraction.',
+    'A clean press beats a heavier sloppy press every time.',
+    'Think about bringing your upper arms together, not just pushing the weight away.',
+    'Keep your chest tall and avoid letting your shoulders roll forward.',
+    'Control the negative and let the chest absorb the load.',
+    'Quality tension builds the chest better than chasing numbers for ego.'
+  ],
+  biceps: [
+    'Keep your elbows quiet. If your shoulders swing, your biceps lose the tension.',
+    'Own the top of the curl for a second before lowering under control.',
+    'Don’t rush the lowering phase—your biceps are still working on the way down.',
+    'Curl with the biceps, not your whole body.',
+    'Keep your wrists strong and avoid bending them back during curls.',
+    'Use a full range instead of shortening the rep just to move more weight.',
+    'Squeeze hard at the top and resist the weight on the way down.',
+    'If your elbows drift forward, lighten the load and clean up the rep.',
+    'Hammer curls build more than the biceps—they also strengthen the brachialis and forearms.',
+    'Good curls look boring: controlled, strict, and repeatable.'
+  ],
+  legs: [
+    'Don’t build chicken legs—give your lower body the same effort you give your upper body.',
+    'Drive through the whole foot and keep the rep controlled from top to bottom.',
+    'Leg day is not about surviving the set—it’s about owning every rep with good form.',
+    'Slow down the lowering phase. Your legs should feel the work before the weight hits the bottom.',
+    'Train the glutes, quads, hamstrings, and calves—balanced legs are strong legs.',
+    'Knees should track with your toes. Control the movement instead of letting the weight control you.',
+    'Don’t rush calf work. Stretch at the bottom, squeeze at the top, and pause.',
+    'A strong lower body supports lifting, running, balance, and longevity.',
+    'Use the range of motion you can control. Depth only counts when your form stays solid.',
+    'Legs grow from consistent hard work, not from skipping the exercises you dislike.',
+    'Push evenly through both legs—don’t let your stronger side quietly take over.',
+    'Keep your core braced so your legs can produce force from a stable base.',
+    'On leg extensions, control the top and squeeze the quads instead of kicking the weight.',
+    'On leg curls, keep the hips planted and make the hamstrings do the work.',
+    'For glute work, finish the rep with the glutes—not by arching your lower back.',
+    'Calves respond to patience: full stretch, full squeeze, no bouncing.',
+    'Don’t confuse speed with intensity. Slow, controlled reps can be brutal.',
+    'Train legs with purpose—every rep should look like the first rep, even near the end.',
+    'Strong legs make everything else easier, from stairs to heavy compound lifts.',
+    'Respect recovery after hard leg days—performance improves when training and recovery work together.'
+  ],
+  back: [
+    'Pull with your elbows, not your hands. Think about driving the elbows back and squeezing the lats.',
+    'Keep your chest proud on rows and finish each rep by squeezing your shoulder blades together.',
+    'Don’t turn every back exercise into a biceps exercise—let the elbows lead.',
+    'On pulldowns, bring the elbows toward your ribs instead of just pulling the bar down.',
+    'Your back is built by tension you can feel, not momentum you can create.',
+    'Keep your shoulders away from your ears during rows and pulldowns.',
+    'Control the stretch at the front of each row before pulling again.',
+    'Use a grip that lets your back work without your forearms taking over.',
+    'Pause briefly at peak contraction to make the back finish the rep.',
+    'If you have to jerk the weight, it is too heavy for the muscles you are trying to train.'
+  ],
+  triceps: [
+    'Lock the upper arm in place and finish every rep with a hard triceps squeeze.',
+    'Control the return on cable work. The negative half of the rep still counts.',
+    'A clean lockout should come from the triceps, not from leaning your whole body into the cable.',
+    'Keep your elbows from flaring if the exercise is meant to isolate the triceps.',
+    'Use full extension without snapping or hyperextending the elbow.',
+    'Let the triceps stretch fully before pressing back down.',
+    'Rope pressdowns work best when you separate the rope at the bottom and squeeze.',
+    'If your shoulders start helping, reduce the weight and restore control.',
+    'Stay planted and make the arms move the resistance—not your torso.',
+    'Strict triceps work usually feels harder than sloppy heavier reps. That is the point.'
+  ],
+  shoulders: [
+    'Control the raise. Momentum moves the weight; your delts should move the weight.',
+    'For lateral raises, lead with the elbows and stop before your traps take over.',
+    'Shoulder training rewards control more than load—keep the reps smooth and deliberate.',
+    'Press overhead without turning it into an incline press. Keep your torso controlled.',
+    'Rear delts matter. Strong shoulders are built from the front, side, and back.',
+    'A slight pause at the top of a lateral raise can make light weight feel heavy.',
+    'Keep your shoulder blades stable and avoid shrugging through every rep.',
+    'Don’t chase height on lateral raises if your traps are taking over.',
+    'Use weights you can control through the full shoulder path.',
+    'Balanced shoulder training improves both appearance and joint control.'
+  ],
+  traps: [
+    'Shrug straight up, pause at the top, and avoid rolling the shoulders.',
+    'For traps, think ears to shoulders—straight up and straight down.',
+    'Hold the top of the shrug briefly instead of bouncing through the rep.',
+    'Use straps if grip limits the traps before the traps are actually tired.',
+    'Keep your neck neutral and let the traps do the lifting.',
+    'Heavy shrugs still need control—don’t shorten the rep just to add plates.',
+    'Lower the weight fully so the traps get a stretch before the next shrug.',
+    'Don’t turn shrugs into arm curls. The shoulders move; the elbows stay quiet.',
+    'A controlled pause at the top makes the rep harder without adding weight.',
+    'Trap work is simple: full elevation, hard squeeze, controlled descent.'
+  ]
+};
+
+const WORKOUT_TIP_SEQUENCE = {
+  'Chest + Biceps': [
+    ...MUSCLE_TIPS.chest.map(t=>({group:'Chest',text:t})),
+    ...MUSCLE_TIPS.biceps.map(t=>({group:'Biceps',text:t}))
+  ],
+  'Legs': MUSCLE_TIPS.legs.map(t=>({group:'Legs',text:t})),
+  'Back + Triceps': [
+    ...MUSCLE_TIPS.back.map(t=>({group:'Back',text:t})),
+    ...MUSCLE_TIPS.triceps.map(t=>({group:'Triceps',text:t}))
+  ],
+  'Shoulders + Traps': [
+    ...MUSCLE_TIPS.shoulders.map(t=>({group:'Shoulders',text:t})),
+    ...MUSCLE_TIPS.traps.map(t=>({group:'Traps',text:t}))
+  ]
+};
+
+function rotatingWorkoutTip(day, schedule){
+  if(!schedule) return 'Missed a weekday? Pick the session you need and keep the week moving.';
+  const tips=WORKOUT_TIP_SEQUENCE[schedule.label] || [];
+  if(!tips.length) return '';
+
+  // Use week number rather than random selection so each scheduled workout advances
+  // one tip at a time and does not repeat until the full sequence has been used.
+  const now=new Date();
+  const startOfYear=new Date(now.getFullYear(),0,1);
+  const dayOfYear=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-startOfYear)/86400000);
+  const weekIndex=Math.floor((dayOfYear + startOfYear.getDay())/7);
+  const tip=tips[weekIndex % tips.length];
+  return tip.text;
+}
+
+
 function scheduleForDay(day){
   if(day>=1 && day<=5) return WEEKDAY_PLANS[day];
   if(weekendMakeupDay) return WEEKDAY_PLANS[weekendMakeupDay];
@@ -285,6 +414,8 @@ function showHome(){
   app.append(daybar);
 
   const schedule=scheduleForDay(selectedDay);
+  const tip=el('div','workout-tip',rotatingWorkoutTip(selectedDay,schedule));
+  app.append(tip);
 
   if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
     const makeup=el('div','card makeup-card');

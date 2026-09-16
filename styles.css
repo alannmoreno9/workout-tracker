@@ -60,3 +60,16 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 
 .day-workout-btn.simplified{margin-top:14px}
 .day-workout-btn.simplified .day-workout-top b{font-size:21px}
+
+
+.workout-tip{
+  margin:0 6px 16px;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  font-size:14px;
+  line-height:1.4;
+  font-weight:700;
+  font-style:italic;
+  color:#455468;
+}
