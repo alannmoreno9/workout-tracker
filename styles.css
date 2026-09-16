@@ -86,3 +86,16 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 .header-progress-count{font-size:13px;font-weight:900;color:#fff;line-height:1}
 .header-progress-track{width:92px;height:7px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden}
 .header-progress-fill{height:100%;width:0;background:#fff;border-radius:999px;transition:width .25s ease}
+
+.sleep-card{margin-bottom:14px}
+.sleep-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.sleep-title-row b{font-size:18px}
+.sleep-latency{font-size:12px;font-weight:800;color:var(--muted);text-align:right}
+.sleep-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sleep-field{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:800;color:var(--muted)}
+.sleep-quality-field{grid-column:1/-1}
+.sleep-time-input,.sleep-quality{width:100%;height:44px;border:1px solid #cfd4da;border-radius:11px;background:var(--yellow);font:inherit;font-size:16px;font-weight:800;padding:0 10px;color:#111}
+.sleep-quality{background:#fff}
+.sleep-calculated{margin-top:10px;font-size:14px;font-weight:900;color:#455468}
+.sleep-save{width:100%;margin-top:12px}
+.sleep-status{text-align:center;margin-top:10px;font-size:13px;font-weight:700;color:var(--muted)}

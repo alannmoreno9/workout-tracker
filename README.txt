@@ -177,3 +177,30 @@ VERSION 19 HEADER PROGRESS
 - Kept Last completed and This week in the workout card.
 - Progress still tracks Cardio, Abs, and the main workout block.
 - No workout history, body-weight data, tips, or exercise values were changed.
+
+
+VERSION 20 SLEEP TRACKING
+- Added Sleep tracking below Body Weight.
+- Enter Bedtime and Wake time.
+- Uses a fixed 30-minute estimate to fall asleep.
+- Optional sleep quality: Poor, Fair, Good, or Great.
+- Automatically calculates estimated sleep duration.
+- Saves one sleep record per calendar day.
+- Progress shows latest sleep, recent history, and a 7-day average.
+- Data tab supports sleep deletion.
+- Sleep history is included in Backup/Import.
+
+
+VERSION 21 SLEEP LABELS
+- Kept the sleep labels concise:
+  - Bedtime
+  - Waketime
+  - Sleeptime
+- Clarified that each sleep record is saved to the wake-up date.
+- Kept the fixed 30-minute estimate to fall asleep.
+- No changes were made to workout history, sleep calculations, body weight, exercise values, or completion logic.
+
+
+VERSION 22 SLEEP LABEL CONSISTENCY
+- Changed the sleep note from “saved to wake-up date” to “saved to Waketime date”.
+- No other sleep, workout, history, body-weight, or progress behavior changed.

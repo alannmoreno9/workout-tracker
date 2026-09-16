@@ -8,6 +8,7 @@ state.cardioCurrent = state.cardioCurrent && typeof state.cardioCurrent === 'obj
 state.checks = state.checks && typeof state.checks === 'object' ? state.checks : {};
 state.history = Array.isArray(state.history) ? state.history : [];
 state.bodyWeightHistory = Array.isArray(state.bodyWeightHistory) ? state.bodyWeightHistory : [];
+state.sleepHistory = Array.isArray(state.sleepHistory) ? state.sleepHistory : [];
 let currentWorkout = null;
 
 let selectedDay = new Date().getDay();
@@ -158,13 +159,13 @@ function scheduleForDay(day){
   return null;
 }
 
-function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[], bodyWeightHistory:[]}; }
+function defaultState(){ return {current:{}, cardioCurrent:{}, checks:{}, history:[], bodyWeightHistory:[], sleepHistory:[]}; }
 function loadState(){
   try{
     const raw = localStorage.getItem(KEY);
     if(!raw){
       const oldRaw=localStorage.getItem('workout_tracker_pwa_secure_v1');
-      if(oldRaw){ const old=JSON.parse(oldRaw); return {current:old.current||{},cardioCurrent:{},checks:old.checks||{},history:Array.isArray(old.history)?old.history.map(r=>({...r,cardio:r.cardio||{}})):[],bodyWeightHistory:Array.isArray(old.bodyWeightHistory)?old.bodyWeightHistory:[]}; }
+      if(oldRaw){ const old=JSON.parse(oldRaw); return {current:old.current||{},cardioCurrent:{},checks:old.checks||{},history:Array.isArray(old.history)?old.history.map(r=>({...r,cardio:r.cardio||{}})):[],bodyWeightHistory:Array.isArray(old.bodyWeightHistory)?old.bodyWeightHistory:[],sleepHistory:Array.isArray(old.sleepHistory)?old.sleepHistory:[]}; }
       return defaultState();
     }
     const parsed = JSON.parse(raw);
@@ -174,7 +175,8 @@ function loadState(){
       cardioCurrent: parsed.cardioCurrent && typeof parsed.cardioCurrent === 'object' ? parsed.cardioCurrent : {},
       checks: parsed.checks && typeof parsed.checks === 'object' ? parsed.checks : {},
       history: Array.isArray(parsed.history) ? parsed.history : [],
-      bodyWeightHistory: Array.isArray(parsed.bodyWeightHistory) ? parsed.bodyWeightHistory : []
+      bodyWeightHistory: Array.isArray(parsed.bodyWeightHistory) ? parsed.bodyWeightHistory : [],
+      sleepHistory: Array.isArray(parsed.sleepHistory) ? parsed.sleepHistory : []
     };
   }catch(_){ return defaultState(); }
 }
@@ -391,6 +393,37 @@ function saveDayWorkout(day){
   state.history.sort((a,b)=>a.date.localeCompare(b.date));
   persist('Today’s workout saved');
 }
+
+function sleepRecordForDate(date){ return (state.sleepHistory||[]).find(x=>x.date===date)||null; }
+function timeToMinutes(t){
+  if(!t || !/^\d{2}:\d{2}$/.test(t)) return null;
+  const [h,m]=t.split(':').map(Number); return h*60+m;
+}
+function calculateSleepHours(bedtime,wakeTime,latencyMinutes=30){
+  const bed=timeToMinutes(bedtime), wake=timeToMinutes(wakeTime);
+  if(bed==null||wake==null) return null;
+  let total=wake-bed; if(total<=0) total+=1440; total-=latencyMinutes;
+  if(total<=0) return null;
+  return Math.round((total/60)*10)/10;
+}
+function saveSleep(bedtime,wakeTime,quality){
+  const hours=calculateSleepHours(bedtime,wakeTime,30);
+  if(hours==null || hours>16){ toast('Check bedtime and wake time'); return false; }
+  if(!Array.isArray(state.sleepHistory)) state.sleepHistory=[];
+  const date=today(), rec={date,bedtime,wakeTime,latencyMinutes:30,hours,quality:quality||''};
+  const idx=state.sleepHistory.findIndex(x=>x.date===date);
+  if(idx>=0) state.sleepHistory[idx]=rec; else state.sleepHistory.push(rec);
+  state.sleepHistory.sort((a,b)=>a.date.localeCompare(b.date));
+  persist(idx>=0?'Sleep updated for today':'Sleep saved for today');
+  return true;
+}
+function sleepRecords(){ return [...(state.sleepHistory||[])].sort((a,b)=>a.date.localeCompare(b.date)); }
+function sleep7DayAverage(){
+  const recs=sleepRecords().slice(-7);
+  if(!recs.length) return null;
+  return Math.round((recs.reduce((s,r)=>s+Number(r.hours||0),0)/recs.length)*10)/10;
+}
+
 function setNav(active){
   for(const n of ['Home','Progress','Data'])
     document.getElementById('nav'+n).classList.toggle('active', n===active);
@@ -509,6 +542,52 @@ function showHome(){
   const status=el('div','body-weight-status', savedToday!=='' ? `Saved today: ${savedToday} lb` : 'Not saved for today yet');
   weightCard.append(status);
   app.append(weightCard);
+
+  const sleepCard=el('div','card sleep-card');
+  const sleepTitle=el('div','sleep-title-row');
+  sleepTitle.append(el('b',null,'Sleep'),el('span','sleep-latency','30 min to fall asleep • saved to Waketime date'));
+  sleepCard.append(sleepTitle);
+
+  const sleepRec=sleepRecordForDate(today());
+  const sleepGrid=el('div','sleep-grid');
+
+  const bedWrap=el('label','sleep-field'); bedWrap.append(el('span',null,'Bedtime'));
+  const bedInput=document.createElement('input'); bedInput.type='time'; bedInput.className='sleep-time-input';
+  bedInput.value=sleepRec?.bedtime||''; bedInput.setAttribute('aria-label','Bedtime'); bedWrap.append(bedInput);
+
+  const wakeWrap=el('label','sleep-field'); wakeWrap.append(el('span',null,'Waketime'));
+  const wakeInput=document.createElement('input'); wakeInput.type='time'; wakeInput.className='sleep-time-input';
+  wakeInput.value=sleepRec?.wakeTime||''; wakeInput.setAttribute('aria-label','Waketime'); wakeWrap.append(wakeInput);
+
+  const qualityWrap=el('label','sleep-field sleep-quality-field'); qualityWrap.append(el('span',null,'Quality'));
+  const qualitySelect=document.createElement('select'); qualitySelect.className='sleep-quality';
+  for(const q of ['','Poor','Fair','Good','Great']){
+    const opt=document.createElement('option'); opt.value=q; opt.textContent=q||'—';
+    if((sleepRec?.quality||'')===q) opt.selected=true; qualitySelect.append(opt);
+  }
+  qualityWrap.append(qualitySelect);
+
+  sleepGrid.append(bedWrap,wakeWrap,qualityWrap);
+  sleepCard.append(sleepGrid);
+
+  const sleepCalc=el('div','sleep-calculated');
+  function refreshSleepCalc(){
+    const hrs=calculateSleepHours(bedInput.value,wakeInput.value,30);
+    sleepCalc.textContent=hrs==null?'Sleeptime: —':`Sleeptime: ${hrs} hr`;
+  }
+  bedInput.addEventListener('change',refreshSleepCalc);
+  wakeInput.addEventListener('change',refreshSleepCalc);
+  refreshSleepCalc();
+  sleepCard.append(sleepCalc);
+
+  const saveSleepBtn=el('button','primary sleep-save','Save Sleep');
+  saveSleepBtn.type='button';
+  saveSleepBtn.addEventListener('click',()=>{ if(saveSleep(bedInput.value,wakeInput.value,qualitySelect.value)) showHome(); });
+  sleepCard.append(saveSleepBtn);
+
+  sleepCard.append(el('div','sleep-status',
+    sleepRec?`Saved today: ${sleepRec.hours} hr${sleepRec.quality?' • '+sleepRec.quality:''}`:'Not saved for today yet'));
+  app.append(sleepCard);
 
   if((selectedDay===0 || selectedDay===6) && !weekendMakeupDay){
     const makeup=el('div','card makeup-card');
@@ -720,6 +799,29 @@ function showProgress(filter='all'){
   }
   app.append(bwCard);
 
+  const sleepRecs=sleepRecords();
+  const sleepProgress=el('div','card'); sleepProgress.style.marginTop='12px';
+  const sleepHdr=el('div','section-title','SLEEP PROGRESS'); sleepHdr.style.margin='-16px -16px 12px';
+  sleepProgress.append(sleepHdr);
+  if(!sleepRecs.length){
+    sleepProgress.append(el('div','empty','No sleep saved yet. Enter Bedtime and Waketime on Home.'));
+  }else{
+    const latest=sleepRecs.at(-1), avg7=sleep7DayAverage();
+    const metric=el('div','metric'), left=el('div'), right=el('div');
+    left.append(el('b',null,`${latest.hours} hr`),
+      el('div','note',`Latest: ${latest.date} • Bed ${latest.bedtime} • Wake ${latest.wakeTime}${latest.quality?' • '+latest.quality:''}`));
+    right.append(el('div','delta flat',`7D avg ${avg7} hr`));
+    metric.append(left,right); sleepProgress.append(metric);
+    const recent=el('div','body-weight-history');
+    for(const r of [...sleepRecs].reverse().slice(0,7)){
+      const row=el('div','body-weight-history-row');
+      row.append(el('span',null,r.date),el('b',null,`${r.hours} hr${r.quality?' • '+r.quality:''}`));
+      recent.append(row);
+    }
+    sleepProgress.append(recent);
+  }
+  app.append(sleepProgress);
+
   let any=false;
   for(const w of PLAN.filter(x=>filter==='all'||x.id===filter)){
     const recs=recsFor(w.id); if(!recs.length) continue; any=true;
@@ -809,7 +911,20 @@ function showData(){
     del.addEventListener('click',()=>deleteBodyWeight(r.date));
     metric.append(left,del); bwData.append(metric);
   }
-  app.append(bwData, el('p','note','Your data stays in this browser on this device. Export a backup periodically, especially before clearing Safari data or changing phones.'));
+  app.append(bwData);
+
+  const sleepData=el('div','card'); sleepData.style.marginTop='12px';
+  sleepData.append(el('b',null,'Sleep days'));
+  const sleepRows=[...(state.sleepHistory||[])].sort((a,b)=>b.date.localeCompare(a.date));
+  if(!sleepRows.length) sleepData.append(el('div','empty','No sleep saved yet.'));
+  for(const r of sleepRows){
+    const metric=el('div','metric'), left=el('div');
+    left.append(el('b',null,r.date),el('div','note',`${r.hours} hr • ${r.bedtime} → ${r.wakeTime}${r.quality?' • '+r.quality:''}`));
+    const del=el('button','secondary','Delete'); del.type='button';
+    del.addEventListener('click',()=>deleteSleep(r.date));
+    metric.append(left,del); sleepData.append(metric);
+  }
+  app.append(sleepData, el('p','note','Your data stays in this browser on this device. Export a backup periodically, especially before clearing Safari data or changing phones.'));
 }
 
 function deleteBodyWeight(date){
@@ -819,6 +934,12 @@ function deleteBodyWeight(date){
   }
 }
 
+function deleteSleep(date){
+  if(confirm('Delete this sleep entry?')){
+    state.sleepHistory=(state.sleepHistory||[]).filter(x=>x.date!==date);
+    persist('Deleted'); showData();
+  }
+}
 function deleteRecord(date,wid){
   if(confirm('Delete this saved workout day?')){
     state.history=state.history.filter(x=>!(x.date===date&&x.workout===wid));
@@ -842,7 +963,8 @@ function importBackup(file){
         cardioCurrent:x.cardioCurrent&&typeof x.cardioCurrent==='object'?x.cardioCurrent:{},
         checks:x.checks&&typeof x.checks==='object'?x.checks:{},
         history:x.history.map(r=>({...r,cardio:r.cardio||{}})),
-        bodyWeightHistory:Array.isArray(x.bodyWeightHistory)?x.bodyWeightHistory:[]
+        bodyWeightHistory:Array.isArray(x.bodyWeightHistory)?x.bodyWeightHistory:[],
+        sleepHistory:Array.isArray(x.sleepHistory)?x.sleepHistory:[]
       };
       persist('Backup imported'); showData();
     }catch(_){ alert('Could not read that backup file.'); }
