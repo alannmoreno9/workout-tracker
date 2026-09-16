@@ -637,17 +637,45 @@ function showHome(){
   }
 
   if(schedule){
-    const cardioCard=el('button','card daily-section-card');
-    cardioCard.type='button';
+    const cardioCard=el('div','card daily-section-card');
     const cardioTop=el('div','daily-section-top');
-    cardioTop.append(el('b',null,'Cardio'),el('small',null,'Tap to start'));
+    cardioTop.append(el('b',null,'Cardio'));
     cardioCard.append(cardioTop);
-    const cardioItems=el('div','daily-cardio-list');
-    for(const name of ['Run','Stairs','Walk','Box']){
-      cardioItems.append(el('span','daily-cardio-chip',name));
+
+    const cardioPlan=PLAN.find(x=>x.id==='cardio');
+    const cardioInline=el('div','cardio-inline-grid');
+
+    for(const [name] of (cardioPlan?.cardio||[])){
+      const item=el('label','cardio-inline-item');
+      item.append(el('span','cardio-inline-name',name));
+
+      const inputWrap=el('div','cardio-inline-input-wrap');
+      const input=document.createElement('input');
+      input.className='weight cardio-inline-input';
+      input.inputMode='decimal';
+      input.autocomplete='off';
+      input.placeholder='0';
+      input.value=getCardioMinutes('cardio',name);
+      input.setAttribute('aria-label','Minutes for '+name);
+      input.addEventListener('change',()=>setCardioMinutes(cardioKey('cardio',name),input.value));
+
+      inputWrap.append(input,el('span','time','min'));
+      item.append(inputWrap);
+      cardioInline.append(item);
     }
-    cardioCard.append(cardioItems);
-    cardioCard.addEventListener('click',()=>showWorkout('cardio'));
+    cardioCard.append(cardioInline);
+
+    const saveCardio=el('button','primary cardio-inline-save','Save Cardio');
+    saveCardio.type='button';
+    saveCardio.addEventListener('click',()=>{
+      saveToday('cardio');
+      updateHeaderProgress(schedule);
+      showHome();
+    });
+    cardioCard.append(saveCardio);
+
+    const cardioSaved=hasRecordForDateWorkout(today(),'cardio');
+    cardioCard.append(el('div','cardio-inline-status',cardioSaved?'Saved today':'Not saved for today yet'));
     app.append(cardioCard);
 
     const exerciseCard=el('button','card day-workout-btn simplified exercise-card');
@@ -985,7 +1013,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=28',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=29',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }

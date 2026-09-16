@@ -260,3 +260,13 @@ VERSION 28 DAILY STRUCTURE
 - Exercise contains Abs plus the scheduled strength workout.
 - Header remains a 5-item daily completion tracker: Sleep, Body Weight, Cardio, Abs, Main Workout.
 - Progress is now ordered: Sleep, Body Weight, Cardio, Exercise.
+
+
+VERSION 29 INLINE CARDIO + TITLE CONSISTENCY
+- Cardio minutes can now be entered directly on the Home screen.
+- Run, Stairs, Walk, and Box each have their own yellow minutes input.
+- Added a Save Cardio button directly inside the Cardio card.
+- Cardio no longer requires opening a separate screen for normal daily entry.
+- Saving Cardio immediately updates the daily completion counter.
+- Standardized Home card titles so Sleep, Body Weight, Cardio, and Exercise use the same font size, weight, style, and color.
+- No workout history, sleep calculations, body-weight data, tip rotation, or 0/5 completion logic changed.

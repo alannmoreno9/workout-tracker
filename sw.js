@@ -1,10 +1,10 @@
 'use strict';
-const CACHE='workout-tracker-secure-v28';
+const CACHE='workout-tracker-secure-v29';
 const ASSETS=[
   './',
   './index.html',
-  './styles.css?v=28',
-  './app.js?v=28',
+  './styles.css?v=29',
+  './app.js?v=29',
   './plan.json',
   './manifest.webmanifest',
   './apple-touch-icon.png',
