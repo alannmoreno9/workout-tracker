@@ -394,12 +394,51 @@ function saveDayWorkout(day){
   persist('Today’s workout saved');
 }
 
+
+function formatTime12(t){
+  if(!t || !/^\d{2}:\d{2}$/.test(t)) return '';
+  const [h,m]=t.split(':').map(Number);
+  const period=h>=12?'PM':'AM';
+  const hour=((h+11)%12)+1;
+  return `${hour}:${String(m).padStart(2,'0')} ${period}`;
+}
+function roundTimeToQuarter(t){
+  if(!t || !/^\d{2}:\d{2}$/.test(t)) return '';
+  let [h,m]=t.split(':').map(Number);
+  let total=h*60+m;
+  total=Math.round(total/15)*15;
+  total=((total%1440)+1440)%1440;
+  const hh=Math.floor(total/60), mm=total%60;
+  return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+}
+function makeQuarterHourSelect(label,currentValue=''){
+  const select=document.createElement('select');
+  select.className='sleep-time-input';
+  select.setAttribute('aria-label',label);
+
+  const blank=document.createElement('option');
+  blank.value=''; blank.textContent='—';
+  select.append(blank);
+
+  const selected=roundTimeToQuarter(currentValue);
+  for(let total=0; total<1440; total+=15){
+    const h=Math.floor(total/60), m=total%60;
+    const value=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+    const opt=document.createElement('option');
+    opt.value=value;
+    opt.textContent=formatTime12(value);
+    if(value===selected) opt.selected=true;
+    select.append(opt);
+  }
+  return select;
+}
+
 function sleepRecordForDate(date){ return (state.sleepHistory||[]).find(x=>x.date===date)||null; }
 function timeToMinutes(t){
   if(!t || !/^\d{2}:\d{2}$/.test(t)) return null;
   const [h,m]=t.split(':').map(Number); return h*60+m;
 }
-function calculateSleepHours(bedtime,wakeTime,latencyMinutes=30){
+function calculateSleepHours(bedtime,wakeTime,latencyMinutes=15){
   const bed=timeToMinutes(bedtime), wake=timeToMinutes(wakeTime);
   if(bed==null||wake==null) return null;
   let total=wake-bed; if(total<=0) total+=1440; total-=latencyMinutes;
@@ -407,10 +446,10 @@ function calculateSleepHours(bedtime,wakeTime,latencyMinutes=30){
   return Math.round((total/60)*10)/10;
 }
 function saveSleep(bedtime,wakeTime,quality){
-  const hours=calculateSleepHours(bedtime,wakeTime,30);
+  const hours=calculateSleepHours(bedtime,wakeTime,15);
   if(hours==null || hours>16){ toast('Check bedtime and wake time'); return false; }
   if(!Array.isArray(state.sleepHistory)) state.sleepHistory=[];
-  const date=today(), rec={date,bedtime,wakeTime,latencyMinutes:30,hours,quality:quality||''};
+  const date=today(), rec={date,bedtime,wakeTime,latencyMinutes:15,hours,quality:quality||''};
   const idx=state.sleepHistory.findIndex(x=>x.date===date);
   if(idx>=0) state.sleepHistory[idx]=rec; else state.sleepHistory.push(rec);
   state.sleepHistory.sort((a,b)=>a.date.localeCompare(b.date));
@@ -519,19 +558,19 @@ function showHome(){
 
   const sleepCard=el('div','card sleep-card');
   const sleepTitle=el('div','sleep-title-row');
-  sleepTitle.append(el('b',null,'Sleep'),el('span','sleep-latency','30 min to fall asleep • saved to Waketime date'));
+  sleepTitle.append(el('b',null,'Sleep'),el('span','sleep-latency','15-min times • 15 min to fall asleep • saved to Waketime date'));
   sleepCard.append(sleepTitle);
 
   const sleepRec=sleepRecordForDate(today());
   const sleepGrid=el('div','sleep-grid');
 
   const bedWrap=el('label','sleep-field'); bedWrap.append(el('span',null,'Bedtime'));
-  const bedInput=document.createElement('input'); bedInput.type='time'; bedInput.className='sleep-time-input';
-  bedInput.value=sleepRec?.bedtime||''; bedInput.setAttribute('aria-label','Bedtime'); bedWrap.append(bedInput);
+  const bedInput=makeQuarterHourSelect('Bedtime',sleepRec?.bedtime||'');
+  bedWrap.append(bedInput);
 
   const wakeWrap=el('label','sleep-field'); wakeWrap.append(el('span',null,'Waketime'));
-  const wakeInput=document.createElement('input'); wakeInput.type='time'; wakeInput.className='sleep-time-input';
-  wakeInput.value=sleepRec?.wakeTime||''; wakeInput.setAttribute('aria-label','Waketime'); wakeWrap.append(wakeInput);
+  const wakeInput=makeQuarterHourSelect('Waketime',sleepRec?.wakeTime||'');
+  wakeWrap.append(wakeInput);
 
   const qualityWrap=el('label','sleep-field sleep-quality-field'); qualityWrap.append(el('span',null,'Quality'));
   const qualitySelect=document.createElement('select'); qualitySelect.className='sleep-quality';
@@ -546,7 +585,7 @@ function showHome(){
 
   const sleepCalc=el('div','sleep-calculated');
   function refreshSleepCalc(){
-    const hrs=calculateSleepHours(bedInput.value,wakeInput.value,30);
+    const hrs=calculateSleepHours(bedInput.value,wakeInput.value,15);
     sleepCalc.textContent=hrs==null?'Sleeptime: —':`Sleeptime: ${hrs} hr`;
   }
   bedInput.addEventListener('change',refreshSleepCalc);

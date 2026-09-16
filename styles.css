@@ -99,3 +99,6 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 .sleep-calculated{margin-top:10px;font-size:14px;font-weight:900;color:#455468}
 .sleep-save{width:100%;margin-top:12px}
 .sleep-status{text-align:center;margin-top:10px;font-size:13px;font-weight:700;color:var(--muted)}
+
+
+.sleep-time-input{-webkit-appearance:menulist;appearance:auto}

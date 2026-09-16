@@ -212,3 +212,20 @@ VERSION 23 MORNING FLOW
   2. Body Weight
   3. Workout
 - No sleep calculations, saved data, workout history, body-weight history, tips, or progress logic changed.
+
+
+VERSION 24 15-MINUTE SLEEP TIMES
+- Bedtime and Waketime now use 15-minute increments only:
+  :00, :15, :30, and :45.
+- Replaced minute-by-minute native time entry with quarter-hour selections for cleaner, faster logging.
+- Existing saved times are rounded to the nearest 15 minutes when shown in the picker.
+- Sleeptime calculation still subtracts the fixed 30-minute fall-asleep estimate.
+- No workout, body-weight, progress, or backup behavior changed.
+
+
+VERSION 25 SLEEP TIMING STANDARD
+- Standardized all sleep timing to 15-minute increments.
+- Bedtime and Waketime remain limited to :00, :15, :30, and :45.
+- Changed the fixed estimated time to fall asleep from 30 minutes to 15 minutes.
+- Sleeptime now subtracts 15 minutes from the Bedtime-to-Waketime interval.
+- No workout, body-weight, progress, backup, or tip behavior changed.
