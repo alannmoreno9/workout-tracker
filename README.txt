@@ -270,3 +270,16 @@ VERSION 29 INLINE CARDIO + TITLE CONSISTENCY
 - Saving Cardio immediately updates the daily completion counter.
 - Standardized Home card titles so Sleep, Body Weight, Cardio, and Exercise use the same font size, weight, style, and color.
 - No workout history, sleep calculations, body-weight data, tip rotation, or 0/5 completion logic changed.
+
+
+VERSION 30 LABEL CLEANUP
+- Replaced the Sleep helper note with:
+  "Sleeptime includes 15 min to fall asleep automatically"
+- Removed the descriptive text line under Body Weight on the Home screen.
+- No workout logic, sleep calculation, cardio entry, body-weight saving, progress tracking, or history changed.
+
+
+VERSION 31 SLEEP NOTE
+- Shortened the Sleep helper note to:
+  "Includes 15 min to fall asleep"
+- No other behavior changed.
