@@ -283,3 +283,8 @@ VERSION 31 SLEEP NOTE
 - Shortened the Sleep helper note to:
   "Includes 15 min to fall asleep"
 - No other behavior changed.
+
+
+VERSION 32 BODY WEIGHT CLEANUP
+- Removed the helper text under Body Weight.
+- No other behavior changed.

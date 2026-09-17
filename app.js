@@ -594,7 +594,7 @@ function showHome(){
   const weightCard=el('div','card body-weight-card');
   const weightTop=el('div','body-weight-top');
   const weightText=el('div');
-  weightText.append(el('b',null,'Body Weight'),el('div','note','Scale weight • one saved value per day'));
+  weightText.append(el('b',null,'Body Weight'));
   const weightControls=el('div','body-weight-controls');
   const bodyInput=document.createElement('input');
   bodyInput.className='weight body-weight-input';
@@ -1013,7 +1013,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=31',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=32',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }
