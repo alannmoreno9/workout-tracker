@@ -288,3 +288,10 @@ VERSION 31 SLEEP NOTE
 VERSION 32 BODY WEIGHT CLEANUP
 - Removed the helper text under Body Weight.
 - No other behavior changed.
+
+
+VERSION 33 SMART WAKETIME DEFAULT
+- Waketime now defaults to the device's current local time rounded to the nearest 15 minutes when no sleep entry has been saved for the day.
+- The Waketime picker opens near the relevant time instead of starting from 12:00 AM.
+- Bedtime remains blank until selected, because the current morning time is not a useful default for the prior night's bedtime.
+- Existing saved sleep entries still load their saved Bedtime and Waketime values.

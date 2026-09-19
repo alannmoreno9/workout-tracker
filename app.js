@@ -394,7 +394,15 @@ function roundTimeToQuarter(t){
   const hh=Math.floor(total/60), mm=total%60;
   return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
 }
-function makeQuarterHourSelect(label,currentValue=''){
+function currentQuarterHour(){
+  const now=new Date();
+  let total=now.getHours()*60+now.getMinutes();
+  total=Math.round(total/15)*15;
+  total=((total%1440)+1440)%1440;
+  const h=Math.floor(total/60), m=total%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+}
+function makeQuarterHourSelect(label,currentValue='',defaultToNow=false){
   const select=document.createElement('select');
   select.className='sleep-time-input';
   select.setAttribute('aria-label',label);
@@ -403,7 +411,7 @@ function makeQuarterHourSelect(label,currentValue=''){
   blank.value=''; blank.textContent='—';
   select.append(blank);
 
-  const selected=roundTimeToQuarter(currentValue);
+  const selected=roundTimeToQuarter(currentValue) || (defaultToNow ? currentQuarterHour() : '');
   for(let total=0; total<1440; total+=15){
     const h=Math.floor(total/60), m=total%60;
     const value=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
@@ -553,11 +561,11 @@ function showHome(){
   const sleepGrid=el('div','sleep-grid');
 
   const bedWrap=el('label','sleep-field'); bedWrap.append(el('span',null,'Bedtime'));
-  const bedInput=makeQuarterHourSelect('Bedtime',sleepRec?.bedtime||'');
+  const bedInput=makeQuarterHourSelect('Bedtime',sleepRec?.bedtime||'',false);
   bedWrap.append(bedInput);
 
   const wakeWrap=el('label','sleep-field'); wakeWrap.append(el('span',null,'Waketime'));
-  const wakeInput=makeQuarterHourSelect('Waketime',sleepRec?.wakeTime||'');
+  const wakeInput=makeQuarterHourSelect('Waketime',sleepRec?.wakeTime||'',true);
   wakeWrap.append(wakeInput);
 
   const qualityWrap=el('label','sleep-field sleep-quality-field'); qualityWrap.append(el('span',null,'Quality'));
@@ -1013,7 +1021,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=32',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=33',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }
