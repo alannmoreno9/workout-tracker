@@ -295,3 +295,10 @@ VERSION 33 SMART WAKETIME DEFAULT
 - The Waketime picker opens near the relevant time instead of starting from 12:00 AM.
 - Bedtime remains blank until selected, because the current morning time is not a useful default for the prior night's bedtime.
 - Existing saved sleep entries still load their saved Bedtime and Waketime values.
+
+
+VERSION 34 PM-FIRST SLEEP TIMES
+- Reordered Bedtime and Waketime choices so PM times appear first, followed by AM times.
+- The order is 12:00 PM through 11:45 PM, then 12:00 AM through 11:45 AM.
+- Waketime still defaults to the device's current local time rounded to the nearest 15 minutes when no Waketime has been saved.
+- Existing saved Bedtime and Waketime values still load normally.

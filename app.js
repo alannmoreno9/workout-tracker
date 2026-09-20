@@ -412,7 +412,11 @@ function makeQuarterHourSelect(label,currentValue='',defaultToNow=false){
   select.append(blank);
 
   const selected=roundTimeToQuarter(currentValue) || (defaultToNow ? currentQuarterHour() : '');
-  for(let total=0; total<1440; total+=15){
+  const orderedTotals=[];
+  for(let total=12*60; total<24*60; total+=15) orderedTotals.push(total);
+  for(let total=0; total<12*60; total+=15) orderedTotals.push(total);
+
+  for(const total of orderedTotals){
     const h=Math.floor(total/60), m=total%60;
     const value=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
     const opt=document.createElement('option');
@@ -1021,7 +1025,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=33',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=34',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }
