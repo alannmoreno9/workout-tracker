@@ -302,3 +302,11 @@ VERSION 34 PM-FIRST SLEEP TIMES
 - The order is 12:00 PM through 11:45 PM, then 12:00 AM through 11:45 AM.
 - Waketime still defaults to the device's current local time rounded to the nearest 15 minutes when no Waketime has been saved.
 - Existing saved Bedtime and Waketime values still load normally.
+
+
+VERSION 35 SLEEP ENTRY NOTE
+- Added a short note in the Sleep section:
+  "Log both times at Waketime"
+- Kept the helper note:
+  "Includes 15 min to fall asleep"
+- No sleep calculation or logging behavior changed.

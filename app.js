@@ -558,7 +558,12 @@ function showHome(){
 
   const sleepCard=el('div','card sleep-card');
   const sleepTitle=el('div','sleep-title-row');
-  sleepTitle.append(el('b',null,'Sleep'),el('span','sleep-latency','Includes 15 min to fall asleep'));
+  const sleepInfo=el('div','sleep-info');
+  sleepInfo.append(
+    el('span','sleep-latency','Includes 15 min to fall asleep'),
+    el('span','sleep-entry-note','Log both times at Waketime')
+  );
+  sleepTitle.append(el('b',null,'Sleep'),sleepInfo);
   sleepCard.append(sleepTitle);
 
   const sleepRec=sleepRecordForDate(today());
@@ -1025,7 +1030,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=34',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=35',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }

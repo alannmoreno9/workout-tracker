@@ -165,3 +165,7 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
   .cardio-inline-grid{gap:10px}
   .cardio-inline-input{width:100%}
 }
+
+
+.sleep-info{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.sleep-entry-note{font-size:12px;font-weight:800;color:var(--muted);text-align:right}
