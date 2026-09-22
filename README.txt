@@ -310,3 +310,10 @@ VERSION 35 SLEEP ENTRY NOTE
 - Kept the helper note:
   "Includes 15 min to fall asleep"
 - No sleep calculation or logging behavior changed.
+
+
+VERSION 36 SLEEP FOOTNOTE
+- Removed the two helper lines from the Sleep title area.
+- Added one footnote directly under Sleeptime:
+  "Total sleep time includes 15 minutes to fall asleep. Please log both times at Waketime."
+- No sleep calculation or logging behavior changed.
