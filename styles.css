@@ -169,3 +169,14 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
 
 
 .sleep-footnote{margin-top:6px;font-size:12.5px;line-height:1.4;font-weight:700;color:var(--muted)}
+
+
+.sleep-entry-inline-note{
+  grid-column:1 / -1;
+  margin-top:-2px;
+  margin-bottom:2px;
+  font-size:12.5px;
+  line-height:1.35;
+  font-weight:800;
+  color:var(--muted);
+}

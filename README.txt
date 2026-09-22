@@ -317,3 +317,12 @@ VERSION 36 SLEEP FOOTNOTE
 - Added one footnote directly under Sleeptime:
   "Total sleep time includes 15 minutes to fall asleep. Please log both times at Waketime."
 - No sleep calculation or logging behavior changed.
+
+
+VERSION 37 SLEEP NOTE PLACEMENT
+- Moved the Waketime note to sit under the Bedtime/Waketime inputs and above Quality.
+- New line reads:
+  "Log both times at Waketime."
+- Shortened the Sleeptime footnote to:
+  "Total sleep time includes 15 minutes to fall asleep."
+- No sleep calculation or logging behavior changed.

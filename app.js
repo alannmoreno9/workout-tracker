@@ -580,7 +580,8 @@ function showHome(){
   }
   qualityWrap.append(qualitySelect);
 
-  sleepGrid.append(bedWrap,wakeWrap,qualityWrap);
+  const sleepEntryNote=el('div','sleep-entry-inline-note','Log both times at Waketime.');
+  sleepGrid.append(bedWrap,wakeWrap,sleepEntryNote,qualityWrap);
   sleepCard.append(sleepGrid);
 
   const sleepCalc=el('div','sleep-calculated');
@@ -593,7 +594,7 @@ function showHome(){
   refreshSleepCalc();
   sleepCard.append(sleepCalc);
 
-  const sleepFootnote=el('div','sleep-footnote','Total sleep time includes 15 minutes to fall asleep. Please log both times at Waketime.');
+  const sleepFootnote=el('div','sleep-footnote','Total sleep time includes 15 minutes to fall asleep.');
   sleepCard.append(sleepFootnote);
 
   const saveSleepBtn=el('button','primary sleep-save','Save Sleep');
@@ -1028,7 +1029,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=36',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=37',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }
