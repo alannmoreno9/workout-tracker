@@ -326,3 +326,11 @@ VERSION 37 SLEEP NOTE PLACEMENT
 - Shortened the Sleeptime footnote to:
   "Total sleep time includes 15 minutes to fall asleep."
 - No sleep calculation or logging behavior changed.
+
+
+VERSION 38 DESCENDING SLEEP TIMES
+- Bedtime and Waketime dropdowns now run in descending 15-minute order.
+- The list starts at 11:45 PM, then 11:30 PM, 11:15 PM, 11:00 PM, and continues downward through the full day.
+- The final entries are 12:15 AM and 12:00 AM.
+- Waketime still defaults to the device's current local time rounded to the nearest 15 minutes when no saved Waketime exists.
+- Existing saved sleep entries still load normally.
