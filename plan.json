@@ -106,27 +106,6 @@
     ],
     "sections": [
       [
-        "FOREARMS 1 x (3 x 12)",
-        [
-          [
-            "Bar Curls",
-            70
-          ],
-          [
-            "Bell Curls",
-            25
-          ],
-          [
-            "Bell Twists",
-            25
-          ],
-          [
-            "Hand Grips",
-            null
-          ]
-        ]
-      ],
-      [
         "BICEPS 3 x (3 x 12)",
         [
           [
@@ -164,6 +143,27 @@
           [
             "Curl Reverse (Bar)",
             40
+          ]
+        ]
+      ],
+      [
+        "FOREARMS 1 x (3 x 12)",
+        [
+          [
+            "Bar Curls",
+            70
+          ],
+          [
+            "Bell Curls",
+            25
+          ],
+          [
+            "Bell Twists",
+            25
+          ],
+          [
+            "Hand Grips",
+            null
           ]
         ]
       ]
@@ -277,6 +277,23 @@
         []
       ],
       [
+        "TEST BOOSTER - BE A MAN\u2757",
+        [
+          [
+            "Life Fitness Seated Leg Press",
+            130
+          ],
+          [
+            "Hammer Strength Leg Press (Plate)",
+            135
+          ],
+          [
+            "Hammer Strength Linear Hack Press (Plate)",
+            45
+          ]
+        ]
+      ],
+      [
         "BUTT - NO SAGGING\u2757",
         [
           [
@@ -334,23 +351,6 @@
             130
           ]
         ]
-      ],
-      [
-        "TEST BOOSTER - BE A MAN\u2757",
-        [
-          [
-            "Life Fitness Seated Leg Press",
-            130
-          ],
-          [
-            "Hammer Strength Leg Press (Plate)",
-            135
-          ],
-          [
-            "Hammer Strength Linear Hack Press (Plate)",
-            45
-          ]
-        ]
       ]
     ]
   },
@@ -377,31 +377,6 @@
         []
       ],
       [
-        "LIFTS",
-        [
-          [
-            "Life Fitness Lateral Raise",
-            80
-          ],
-          [
-            "Nitroevo Lateral Raise",
-            80
-          ],
-          [
-            "Bar Raise",
-            40
-          ],
-          [
-            "Bell Raise",
-            20
-          ],
-          [
-            "Cable Raise",
-            20
-          ]
-        ]
-      ],
-      [
         "PRESSES",
         [
           [
@@ -423,6 +398,31 @@
           [
             "Bar Press",
             null
+          ]
+        ]
+      ],
+      [
+        "LIFTS",
+        [
+          [
+            "Life Fitness Lateral Raise",
+            80
+          ],
+          [
+            "Nitroevo Lateral Raise",
+            80
+          ],
+          [
+            "Bar Raise",
+            40
+          ],
+          [
+            "Bell Raise",
+            20
+          ],
+          [
+            "Cable Raise",
+            20
           ]
         ]
       ],
@@ -497,23 +497,6 @@
     ],
     "sections": [
       [
-        "LOW BACK 1 x (3 x 12)",
-        [
-          [
-            "Life Fitness Back Extension",
-            160
-          ],
-          [
-            "Matrix Back Extension",
-            150
-          ],
-          [
-            "Body Back Extension",
-            null
-          ]
-        ]
-      ],
-      [
         "BACK 3 x (3 x 12)",
         [
           [
@@ -562,6 +545,23 @@
           ],
           [
             "Life Fitness Rear Deltoid Fly",
+            null
+          ]
+        ]
+      ],
+      [
+        "LOW BACK 1 x (3 x 12)",
+        [
+          [
+            "Life Fitness Back Extension",
+            160
+          ],
+          [
+            "Matrix Back Extension",
+            150
+          ],
+          [
+            "Body Back Extension",
             null
           ]
         ]

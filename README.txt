@@ -334,3 +334,28 @@ VERSION 38 DESCENDING SLEEP TIMES
 - The final entries are 12:15 AM and 12:00 AM.
 - Waketime still defaults to the device's current local time rounded to the nearest 15 minutes when no saved Waketime exists.
 - Existing saved sleep entries still load normally.
+
+
+VERSION 39 SLEEP QUALITY ORDER
+- Reordered Sleep Quality options to:
+  Great
+  Good
+  Fair
+  Poor
+- No sleep calculation or logging behavior changed.
+
+
+VERSION 40 EXERCISE ORDER
+- Abs is now always last in the daily Exercise sequence.
+- Daily order:
+  Monday: Chest -> Biceps & Forearms -> Abs
+  Tuesday: Legs -> Abs
+  Wednesday: Back -> Lower Back -> Triceps -> Abs
+  Thursday: Legs -> Abs
+  Friday: Shoulders -> Traps -> Abs
+- Reordered individual workout sections from larger/compound muscle groups to smaller/accessory groups where applicable.
+- Back now shows Back before Lower Back.
+- Biceps & Forearms now shows Biceps before Forearms.
+- Shoulders now shows Presses before Lifts and Flys.
+- Legs now starts with compound leg presses, then glutes, leg isolation, and calves.
+- No saved data, completion tracking, sleep, cardio, or progress behavior changed.

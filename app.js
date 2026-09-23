@@ -17,11 +17,11 @@ let weekendMakeupDay = null;
 const DAY_LABELS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const WEEKDAY_PLANS = {
-  1: {label:'Chest + Biceps', workouts:['cardio','abs','chest','biceps']},
-  2: {label:'Legs', workouts:['cardio','abs','legs']},
-  3: {label:'Back + Triceps', workouts:['cardio','abs','back','triceps']},
-  4: {label:'Legs', workouts:['cardio','abs','legs']},
-  5: {label:'Shoulders + Traps', workouts:['cardio','abs','shoulders','traps']}
+  1: {label:'Chest + Biceps', workouts:['cardio','chest','biceps','abs']},
+  2: {label:'Legs', workouts:['cardio','legs','abs']},
+  3: {label:'Back + Triceps', workouts:['cardio','back','triceps','abs']},
+  4: {label:'Legs', workouts:['cardio','legs','abs']},
+  5: {label:'Shoulders + Traps', workouts:['cardio','shoulders','traps','abs']}
 };
 
 const MUSCLE_TIPS = {
@@ -342,7 +342,7 @@ function showDayWorkout(day){
   clearApp(); const app=document.getElementById('app');
 
   const intro=el('div','hero day-hero');
-  intro.append(el('h2',null,'Exercise'),el('p',null,`Abs → ${schedule.label}`));
+  intro.append(el('h2',null,'Exercise'),el('p',null,`${schedule.label} → Abs`));
   app.append(intro);
 
   const actions=el('div','actions');
@@ -573,7 +573,7 @@ function showHome(){
 
   const qualityWrap=el('label','sleep-field sleep-quality-field'); qualityWrap.append(el('span',null,'Quality'));
   const qualitySelect=document.createElement('select'); qualitySelect.className='sleep-quality';
-  for(const q of ['','Poor','Fair','Good','Great']){
+  for(const q of ['','Great','Good','Fair','Poor']){
     const opt=document.createElement('option'); opt.value=q; opt.textContent=q||'—';
     if((sleepRec?.quality||'')===q) opt.selected=true; qualitySelect.append(opt);
   }
@@ -700,7 +700,7 @@ function showHome(){
     exerciseCard.append(exerciseTop);
 
     const list=el('div','day-workout-list');
-    for(const name of ['Abs',schedule.label]) list.append(el('div','day-workout-item',name));
+    for(const name of [schedule.label,'Abs']) list.append(el('div','day-workout-item',name));
     exerciseCard.append(list);
 
     const details=el('div','day-extra-meta');
@@ -1028,7 +1028,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=38',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=40',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }
