@@ -180,3 +180,12 @@ nav button{border:0;background:transparent;padding:8px 4px;color:#667085;font-we
   font-weight:800;
   color:var(--muted);
 }
+
+
+.exercise-inline-card{margin-top:0}
+.exercise-inline-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.exercise-inline-top b{font-size:20px;font-weight:900;color:#111;line-height:1.2}
+.exercise-inline-card .section{margin:12px 0 0}
+.exercise-inline-card .section:first-of-type{margin-top:0}
+.exercise-inline-save{width:100%;margin-top:16px}
+.exercise-inline-status{text-align:center;margin-top:10px;font-size:13px;font-weight:700;color:var(--muted)}

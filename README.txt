@@ -359,3 +359,16 @@ VERSION 40 EXERCISE ORDER
 - Shoulders now shows Presses before Lifts and Flys.
 - Legs now starts with compound leg presses, then glutes, leg isolation, and calves.
 - No saved data, completion tracking, sleep, cardio, or progress behavior changed.
+
+
+VERSION 41 ONE-SCREEN DAILY INPUT
+- Moved the full daily Exercise inputs onto the Home screen.
+- Users no longer need to tap into a separate Exercise page for normal daily logging.
+- Daily Home flow is now:
+  Sleep -> Body Weight -> Cardio -> Exercise.
+- Exercise inputs follow the established large-to-small muscle sequence, with Abs always last.
+- Example Wednesday:
+  Back -> Lower Back -> Triceps -> Abs.
+- Added a Save Exercise button directly on Home.
+- Kept the existing 0/5 daily completion tracker and saved-history behavior.
+- The separate individual workout screens remain available under All individual workouts.

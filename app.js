@@ -374,7 +374,7 @@ function saveDayWorkout(day){
     saveRecord(id, {});
   }
   state.history.sort((a,b)=>a.date.localeCompare(b.date));
-  persist('Today’s workout saved');
+  persist('Exercise saved');
 }
 
 
@@ -693,15 +693,26 @@ function showHome(){
     cardioCard.append(el('div','cardio-inline-status',cardioSaved?'Saved today':'Not saved for today yet'));
     app.append(cardioCard);
 
-    const exerciseCard=el('button','card day-workout-btn simplified exercise-card');
-    exerciseCard.type='button';
-    const exerciseTop=el('div','day-workout-top day-workout-top-compact');
-    exerciseTop.append(el('b',null,'Exercise'),el('small',null,'Tap to start'));
+    const exerciseCard=el('div','card exercise-inline-card');
+    const exerciseTop=el('div','exercise-inline-top');
+    exerciseTop.append(el('b',null,'Exercise'));
     exerciseCard.append(exerciseTop);
 
-    const list=el('div','day-workout-list');
-    for(const name of [schedule.label,'Abs']) list.append(el('div','day-workout-item',name));
-    exerciseCard.append(list);
+    const exerciseIds=schedule.workouts.filter(id=>id!=='cardio');
+    for(const id of exerciseIds){
+      appendExerciseSections(exerciseCard,id);
+    }
+
+    const saveExercise=el('button','primary exercise-inline-save','Save Exercise');
+    saveExercise.type='button';
+    const exerciseStatus=el('div','exercise-inline-status',
+      exerciseIds.every(id=>hasRecordForDateWorkout(today(),id)) ? 'Saved today' : 'Not saved for today yet');
+    saveExercise.addEventListener('click',()=>{
+      saveDayWorkout(selectedDay);
+      updateHeaderProgress(schedule);
+      exerciseStatus.textContent='Saved today';
+    });
+    exerciseCard.append(saveExercise,exerciseStatus);
 
     const details=el('div','day-extra-meta');
     const lastDate=lastCompletedDayDate(schedule);
@@ -712,7 +723,6 @@ function showHome(){
     );
     exerciseCard.append(details);
 
-    exerciseCard.addEventListener('click',()=>showDayWorkout(selectedDay));
     app.append(exerciseCard);
   }
 
@@ -1028,7 +1038,7 @@ async function init(){
   });
 
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js?v=40',{scope:'./'}).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js?v=41',{scope:'./'}).catch(()=>{});
   }
   showHome();
 }
